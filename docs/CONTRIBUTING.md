@@ -14,7 +14,7 @@ Si votre client Git supporte Git Flow, vous pouvez utilisez les fonctionnalitée
 
 ## License
 
-Le projet est publié avec la license MIT. Pour plus de détails, [voir le document de License](./LICENSE)
+Le projet est publié avec la license MIT. Pour plus de détails, [voir le document de License](../LICENSE)
 
 ## Règles de conduites
 
