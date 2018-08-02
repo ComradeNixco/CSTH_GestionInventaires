@@ -25,7 +25,7 @@ Le projet est né de la constatation du manque de rigueur et/ou de constance dan
 
 ## Participé au projet
 
-Lire le document [Guide de participation au projet](docs/CONTRIBBUTING.md)
+Lire le document [Guide de participation au projet](docs/CONTRIBUTING.md)
 
 ## Gestion du projet
 
