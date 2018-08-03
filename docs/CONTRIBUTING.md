@@ -18,16 +18,4 @@ Le projet est publié avec la license MIT. Pour plus de détails, [voir le docum
 
 ## Règles de conduites
 
-Si votre pull request ne répond pas au [Règles de participations](./CODE_OF_CONDUCT.md), sachez qu'il est fort probable que celui-ci soit refusé avec une demande de modification.
-
-## Règles de participation au projet
-
-- Respect du travail des autres;
-- Rester poli envers les autres et leur travail;
-- Ne pas ordonner, mais plutôt demander.
-
-De plus ce projet encourage l'entraide, tout commentaires ne suivant pas cette ligne de conduite sera donc ignoré
-
-Le non-respect de ses règles de bases verra un refus catégorique de la contribution et l'ignorement des commentaires portés par la personne contrevennante.
-
-D'autres "sanctions" peuvent s'appliquer aux besoins.
+Veuillez savoir que toute participation au projet est sujet à des [Règles de participation](./CODE_OF_CONDUCT.md)
