@@ -7,7 +7,9 @@ Dans le but de promouvoir un environnement sain et respectueux pour tous les par
 - Respecter les autres contributeurs ainsi que leur travail.
 - Ne pas ordonner, mais plutôt demander.
 
-De plus ce projet encourage l'entraide, tout commentaires ne suivant pas cette ligne de conduite sera donc ignoré
+De plus ce projet encourage l'entraide, tout commentaires ne suivant pas cette ligne de conduite sera donc ignoré.
+
+Il est aussi demandé de respecté la [Convention de codage](./CODING_CONVENTION.md) dans l'ensemble de votre participation au code.
 
 Le non-respect de ses règles de bases verra un refus catégorique de la contribution et l'ignorement des commentaires portés par la personne contrevennante.
 

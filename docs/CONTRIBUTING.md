@@ -18,4 +18,8 @@ Le projet est publié avec la license MIT. Pour plus de détails, [voir le docum
 
 ## Règles de conduites
 
-Veuillez savoir que toute participation au projet est sujet à des [Règles de participation](./CODE_OF_CONDUCT.md)
+Veuillez savoir que toute participation au projet est sujet à des [Règles de participation](./CODE_OF_CONDUCT.md).
+
+## Convention de codage
+
+Le projet a une [convention de codage](./CODING_CONVENTION.md) et il est demander de la suivre pour tout le code que vous aurez écrit.
