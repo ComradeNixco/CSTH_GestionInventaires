@@ -23,3 +23,7 @@ Veuillez savoir que toute participation au projet est sujet à des [Règles de p
 ## Convention de codage
 
 Le projet a une [convention de codage](./CODING_CONVENTION.md) et il est demander de la suivre pour tout le code que vous aurez écrit.
+
+## Contributeurs actuels
+
+La liste des contributeurs est accessible [ici](./CONTRIBUTORS.md)
