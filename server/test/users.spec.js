@@ -65,6 +65,32 @@ describe('Users API tests', () => {
     });
   });
 
+  describe('Authenticated routes', () => {
+    let token = '';
+    before(login());
+
+    
+
+    function login() {
+      return done => {
+        request
+          .post('/users/login')
+          .send({
+            'username': 'test',
+            'passwd': 'Password01$'
+          })
+          .expect(HttpCodes.OK)
+          .end(onResponse)
+        ;
+
+        let onResponse = (err, res) => {
+          token = res.body.token;
+          done();
+        };
+      };
+    }
+  });
+
   function verifyForJWT(body) {
     expect(body).to.be.a('string');
     expect(body).to.match(/^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/, 'The token string should be well-formatted'); // official jwt regex
