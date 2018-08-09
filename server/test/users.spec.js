@@ -69,7 +69,30 @@ describe('Users API tests', () => {
     let token = '';
     before(login());
 
-    
+    describe('GET /users/:username', () => {
+      it('should refuse an unauthenticated request', done => {
+        request
+          .get('/users/test')
+          .expect(HttpCodes.UNAUTHORIZED, done)
+        ;
+      });
+
+      it('should return a valid user object with HTTP 200 ', done => {
+        request
+          .get('/users/test')
+          .set('Authorization', `bearer ${token}`)
+          .expect(HttpCodes.OK)
+          .expect('Content-Type', /json/)
+          .end((err, res) => {
+            if(err) return done(err);
+
+            expect(res.body).to.have.property('_id');
+            expect(res.body).to.have.property('username').that.is.a('string').that.equals('test');
+            // The user object returned by this route will most probably get other fields (like a theme id or name or what not)
+          })
+        ;
+      });
+    });
 
     function login() {
       return done => {
