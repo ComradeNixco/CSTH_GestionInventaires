@@ -84,14 +84,23 @@ describe('Users API tests', () => {
           .expect(HttpCodes.OK)
           .expect('Content-Type', /json/)
           .end((err, res) => {
-            if(err) return done(err);
+            if (err) {
+              done(err);
+              return;
+            }
 
             expect(res.body).to.have.property('_id');
             expect(res.body).to.have.property('username').that.is.a('string').that.equals('test');
+            expect(res.body).to.have.property('isActive').that.is.a('boolean').that.equals(true, 'The test user should be activated');
+            expect(res.body).to.have.property('isAdmin').that.is.a('boolean').that.equals(false, 'test user represents a \'normal\' user for the sake of testing');
             // The user object returned by this route will most probably get other fields (like a theme id or name or what not)
           })
         ;
       });
+    });
+
+    describe('GET /users', () => {
+
     });
 
     function login() {
@@ -107,6 +116,30 @@ describe('Users API tests', () => {
         ;
 
         let onResponse = (err, res) => {
+          token = res.body.token;
+          done();
+        };
+      };
+    }
+
+    function loginAsAdmin() {
+      return done => {
+        request
+          .post('/users/login')
+          .send({
+            'username': 'test-admin',
+            'passwd': 'Password01$'
+          })
+          .expect(HttpCodes.OK)
+          .end(onResponse)
+        ;
+
+        let onResponse = (err, res) => {
+          if (err) {
+            done(err);
+            return;
+          }
+
           token = res.body.token;
           done();
         };
