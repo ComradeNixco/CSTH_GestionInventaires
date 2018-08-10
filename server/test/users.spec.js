@@ -79,7 +79,14 @@ describe('Users API tests', () => {
         ;
       });
 
-      it('should return a valid user object with HTTP 200 ', done => {
+      it('should return HTTP 404 (NOT FOUND) if username don\'t exist', function(done) {
+        request
+          .get(`${BASE_URL}/Waldo`)
+          .expect(HttpCodes.NOT_FOUND, done)
+        ;
+      });
+
+      it('should return a valid user object with HTTP 200 ', function(done) {
         request
           .get(`${BASE_URL}/test`)
           .set('Authorization', `bearer ${auth.token}`)
