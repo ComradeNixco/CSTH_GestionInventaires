@@ -134,9 +134,33 @@ describe('Users API tests', function() {
       });
     });
 
-    describe('POST /users/:username/active', function () {
-      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/active`));
-      it('should refuse to proceed if asking user isn\'t admin', nonAdminTest(`${BASE_URL}/test/active`));
+    describe('POST /users/:username/isActive', function () {
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isActive`));
+      it('should refuse to proceed if asking user isn\'t admin', nonAdminTest(`${BASE_URL}/test/isActive`));
+
+      // In this test it is assumed that test-admin is the only admin user hence the last one
+      it('should refuse to deactivate the last admin user', function(done) {
+        getUserInfo('test-admin', 'isActive', function(err, val) {
+          if (err) return done(err);
+
+          const startingState = val;
+
+          request
+            .post(`${BASE_URL}/test-admin/isActive`)
+            .set('Authorization', `bearer ${authAdmin.token}`)
+            .expect(HttpCodes.CONFLICT) // if a better error code could be use this should be replaced with that "better" one, also if it happens the payload assertion should be change to reflect that modification
+            .end(function(er, res) {
+              if (er) return done(er);
+
+              expect(res.body).to.have.property('state').that.is.a('boolean');
+              expect(res.body).to.have.property('conflictReason').that.is.a('string').which.equals('This user is the last admin, it cannot be deactivated');
+
+              const newState = res.body.state;
+              expect(newState).to.equal(startingState);
+            })
+          ;
+        });
+      });
 
       it('should accept and toggle the activeness state of the user', function(done) {
         getUserInfo('test', 'isActive', function(err, val) {
@@ -145,16 +169,66 @@ describe('Users API tests', function() {
           const startingState = val;
 
           request
-            .post(`${BASE_URL}/test/active`)
+            .post(`${BASE_URL}/test/isActive`)
             .set('Authorization', `bearer ${authAdmin.token}`)
             .expect(HttpCodes.OK)
             .end(function(er, res) {
               if (er) return done(er);
 
+              expect(res.body).to.have.property('newState').that.is.a('boolean');
               const newState = res.body.newState;
 
               expect(newState).to.not.equal(startingState);
-              expect(newState).to.equal(!startingState);
+            })
+          ;
+        });
+      });
+    });
+
+    describe('POST /users/:username/isAdmin', function() {
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isAdmin`));
+      it('should refuse to proceed if asking user isn\'t an admin', nonAdminTest(`${BASE_URL}/test/isAdmin`));
+
+      it('should refuse to "un-admin" the last admin user', function(done) {
+        getUserInfo('test-admin', 'isAdmin', function(err, val) {
+          if (err) return done(err);
+
+          const startingState = val;
+
+          request
+            .post(`${BASE_URL}/test-admin/isAdmin`)
+            .set('Authorization', `bearer ${authAdmin.token}`)
+            .expect(HttpCodes.CONFLICT) // if a better error code could be use this should be replaced with that "better" one, also if it happens the payload assertion should be change to reflect that modification
+            .end(function(er, res) {
+              if (er) return done(er);
+
+              expect(res.body).to.have.property('state').that.is.a('boolean');
+              expect(res.body).to.have.property('conflictReason').that.is.a('string').which.equals('This user is the last admin, it cannot be stripped of it\' admin rights');
+
+              const newState = res.body.state;
+              expect(newState).to.equal(startingState);
+            })
+          ;
+        });
+      });
+
+      it('should accept and toggle the admin state of the user if the client has admin rights', function(done) {
+        getUserInfo('test', 'isAdmin', function(err, val) {
+          if (err) return done(err);
+
+          const startingState = val;
+
+          request
+            .post(`${BASE_URL}/test/isAdmin`)
+            .set('Authorization', `bearer ${authAdmin.token}`)
+            .expect(HttpCodes.OK)
+            .end(function(e, res) {
+              if (e) return done(e);
+
+              expect(res.body).to.have.property('newState').that.is.a('boolean');
+              const newState = res.body.newState;
+
+              expect(newState).to.not.equal(startingState);
             })
           ;
         });
