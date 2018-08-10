@@ -8,9 +8,9 @@ let request = supertest(app);
 
 const BASE_URL = '/users';
 
-describe('Users API tests', () => {
-  describe('POST /users/login', () => {
-    it('should respond with HTTP 400 (BAD REQUEST) if request body is malformed', done => {
+describe('Users API tests', function() {
+  describe('POST /users/login', function() {
+    it('should respond with HTTP 400 (BAD REQUEST) if request body is malformed', function(done) {
       request
         .post(`${BASE_URL}/login`)
         .send({}) // Some invalid JSON object
@@ -18,7 +18,7 @@ describe('Users API tests', () => {
       ;
     });
 
-    it('should return a JWT upon a successful login', done => {
+    it('should return a JWT upon a successful login', function(done) {
       request
         .post(`${BASE_URL}/login`)
         .send({
@@ -34,7 +34,7 @@ describe('Users API tests', () => {
       ;
     });
 
-    it('should respond with HTTP 401 (UNAUTHORIZED) if trying to connect with bad credentials', done => {
+    it('should respond with HTTP 401 (UNAUTHORIZED) if trying to connect with bad credentials', function(done) {
       request
         .post(`${BASE_URL}/login`)
         .send({
@@ -46,8 +46,8 @@ describe('Users API tests', () => {
     });
   }); // END POST /users/login
 
-  describe('POST /users/register', () => {
-    it('should respond with HTTP 400 (BAD REQUEST) if request body is malformed', done => {
+  describe('POST /users/register', function() {
+    it('should respond with HTTP 400 (BAD REQUEST) if request body is malformed', function(done) {
       request
         .post(`${BASE_URL}/register`)
         .send({}) // Some invalid JSON object
@@ -55,7 +55,7 @@ describe('Users API tests', () => {
       ;
     });
 
-    it('should return HTTP 200 (OK) to confirm account creation', done => {
+    it('should return HTTP 200 (OK) to confirm account creation', function(done) {
       request
         .post(`${BASE_URL}/register`)
         .send({
@@ -67,11 +67,11 @@ describe('Users API tests', () => {
     });
   });
 
-  describe('Authenticated routes (non-admin)', () => {
+  describe('Authenticated routes (non-admin)', function() {
     let auth = {};
     before(login('test', 'Password01$', auth));
 
-    describe('GET /users/:username', () => {
+    describe('GET /users/:username', function() {
       it('should refuse an unauthenticated request', done => {
         request
           .get(`${BASE_URL}/test`)
@@ -106,21 +106,21 @@ describe('Users API tests', () => {
     });
   });
 
-  describe('Authenticated routes (Admin)', () => {
-    describe('GET /users', () => {
-      let authAdmin = {};
-      let authUser = {};
-      before(login('test-admin', 'Password01$', authAdmin));
-      before(login('test', 'Password01$', authUser));
+  describe('Authenticated routes (Admin)', function() {
+    let authAdmin = {};
+    let authUser = {};
+    before(login('test-admin', 'Password01$', authAdmin));
+    before(login('test', 'Password01$', authUser));
 
-      it('should refuse an unauthicated request', done => {
+    describe('GET /users', function() {
+      it('should refuse an unauthicated request', function(done) {
         request
           .get(`${BASE_URL}/`)
           .expect(HttpCodes.UNAUTHORIZED, done)
         ;
       });
 
-      it('should refuse an authenticated request from a non-admin user', done => {
+      it('should refuse an authenticated request from a non-admin user', function(done) {
         request
           .get(`${BASE_URL}/`)
           .set('Authorization', `bearer ${authAdmin.token}`)
@@ -128,7 +128,7 @@ describe('Users API tests', () => {
         ;
       });
 
-      it('should accept an admin-authenticated request and return an array of users', done => {
+      it('should accept an admin-authenticated request and return an array of users', function(done) {
         request
           .get(`${BASE_URL}/`)
           .set('Authorization', `bearer ${authAdmin.token}`)
