@@ -9,6 +9,8 @@ let request = supertest(app);
 const BASE_URL = '/users';
 
 describe('Users API tests', function() {
+  this.timeout('5s');
+
   describe('POST /users/login', function() {
     it('should respond with HTTP 400 (BAD REQUEST) if request body is malformed', function(done) {
       request
@@ -25,7 +27,7 @@ describe('Users API tests', function() {
           'username': 'test',
           'passwd': 'Password01$'
         })
-        .expect(HttpCodes.OK, (err, res) => {
+        .expect(HttpCodes.OK, function(err, res) {
           expect(res.body).to.have.property('token').that.is.a('string');
           const payload = verifyForJWT(res.body.token);
           expect(payload.username).to.equal('test');
@@ -76,7 +78,7 @@ describe('Users API tests', function() {
 
       it('should return HTTP 404 (NOT FOUND) if username don\'t exist', function(done) {
         request
-          .get(`${BASE_URL}/Waldo`)
+          .get(`${BASE_URL}/Waldo`) // Sadly, the the server didn't find Waldo :'(
           .expect(HttpCodes.NOT_FOUND, done)
         ;
       });
@@ -299,7 +301,7 @@ describe('Users API tests', function() {
    * @returns {Mocha.Func} The callback doing the login attempt for the asked credentials
    */
   function login(username, passwd, auth) {
-    return done => {
+    return function(done) {
       request
         .post(`${BASE_URL}/login`)
         .send({
