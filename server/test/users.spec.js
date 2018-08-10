@@ -72,12 +72,7 @@ describe('Users API tests', function() {
     before(login('test', 'Password01$', auth));
 
     describe('GET /users/:username', function() {
-      it('should refuse an unauthenticated request', done => {
-        request
-          .get(`${BASE_URL}/test`)
-          .expect(HttpCodes.UNAUTHORIZED, done)
-        ;
-      });
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test`));
 
       it('should return HTTP 404 (NOT FOUND) if username don\'t exist', function(done) {
         request
@@ -113,20 +108,16 @@ describe('Users API tests', function() {
     before(login('test', 'Password01$', authUser));
 
     describe('GET /users', function() {
-      it('should refuse an unauthicated request', function(done) {
-        request
-          .get(`${BASE_URL}/`)
-          .expect(HttpCodes.UNAUTHORIZED, done)
-        ;
-      });
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(BASE_URL));
+      it('should refuse an authenticated request from a non-admin user', nonAdminTest(BASE_URL));
 
-      it('should refuse an authenticated request from a non-admin user', function(done) {
+      /*it('should refuse an authenticated request from a non-admin user', function(done) {
         request
           .get(`${BASE_URL}/`)
           .set('Authorization', `bearer ${authAdmin.token}`)
           .expect(HttpCodes.FORBIDDEN, done)
         ;
-      });
+      });*/
 
       it('should accept an admin-authenticated request and return an array of users', function(done) {
         request
@@ -142,8 +133,74 @@ describe('Users API tests', function() {
         ;
       });
     });
+
+    describe('POST /users/:username/active', function () {
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/active`));
+      it('should refuse to proceed if asking user isn\'t admin', nonAdminTest(`${BASE_URL}/test/active`));
+
+      it('should accept and toggle the activeness state of the user', function(done) {
+        getUserInfo('test', 'isActive', function(err, val) {
+          if (err) return done(err);
+
+          const startingState = val;
+
+          request
+            .post(`${BASE_URL}/test/active`)
+            .set('Authorization', `bearer ${authAdmin.token}`)
+            .expect(HttpCodes.OK)
+            .end(function(er, res) {
+              if (er) return done(er);
+
+              const newState = res.body.newState;
+
+              expect(newState).to.not.equal(startingState);
+              expect(newState).to.equal(!startingState);
+            })
+          ;
+        });
+      });
+    });
+
+    /**
+     * Prepare a test callback to test if a non-admin user gets HTTP 403 (Forbidden) when trying to do admin actions
+     *
+     * @param {*} route The route to test
+     * @returns {Mocha.Func} The prepared test callback
+     */
+    function nonAdminTest(route) {
+      return function(done) {
+        request
+          .get(route)
+          .set('Authorization', `bearer ${authUser.token}`)
+          .expect(HttpCodes.FORBIDDEN, done)
+        ;
+      };
+    }
   });
 
+  /**
+   * Gets the User's asked info from the Express App
+   *
+   * @param {string} username
+   * @param {string} infoname name of the wanted property in the User object
+   * @param {(err, val)=>void} cb A callback to call to handle the value of the asked information
+   */
+  function getUserInfo(username, infoName, cb) {
+    request
+      .get(`${BASE_URL}/${username}`)
+      .expect(HttpCodes.OK)
+      .end(function(err, res){
+        cb(err, res.body[infoName]);
+      })
+    ;
+  }
+
+  /**
+   * Validate a JWT token and returns it's payload upon validation of it
+   *
+   * @param {*} body The object to validate
+   * @returns
+   */
   function verifyForJWT(body) {
     expect(body).to.be.a('string');
     expect(body).to.match(/^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/, 'The token string should be well-formatted'); // official jwt regex
@@ -159,6 +216,14 @@ describe('Users API tests', function() {
     return payload;
   }
 
+  /**
+   * Login a user to obtain a valid JWT token representing it, returning a function doing it as a callback/thunk
+   *
+   * @param {*} username
+   * @param {*} passwd
+   * @param {*} auth object that will be added a token property containing the token for the asked login attempt (if successful)
+   * @returns {Mocha.Func} The callback doing the login attempt for the asked credentials
+   */
   function login(username, passwd, auth) {
     return done => {
       request
@@ -168,13 +233,26 @@ describe('Users API tests', function() {
           'passwd': passwd
         })
         .expect(HttpCodes.OK)
-        .end(onResponse)
+        .end(function(err, res) {
+          auth.token = res.body.token;
+          done();
+        })
       ;
+    };
+  }
 
-      let onResponse = (err, res) => {
-        auth.token = res.body.token;
-        done();
-      };
+  /**
+     * Prepare a test callback to test if an unauthenticated user gets HTTP 401 (UNAUTHORIZED) when trying to do protected actions or accessing protected ressources
+     *
+     * @param {*} route The route to test
+     * @returns {Mocha.Func} The prepared test callback
+     */
+  function unAuthenticatedTest(route) {
+    return function(done) {
+      request
+        .get(route)
+        .expect(HttpCodes.UNAUTHORIZED, done)
+      ;
     };
   }
 });
