@@ -8,7 +8,8 @@ let request = supertest(app);
 
 const BASE_URL = '/users';
 
-describe('Users API tests', function() {
+
+describe('Users API', function() {
   this.timeout('5s');
 
   describe('POST /users/login', function() {
@@ -57,14 +58,25 @@ describe('Users API tests', function() {
       ;
     });
 
-    it('should return HTTP 200 (OK) to confirm account creation', function(done) {
+    it('should return HTTP 201 (CREATED) to confirm account creation', function(done) {
       request
         .post(`${BASE_URL}/register`)
         .send({
-          'username': 'aNewTestUser',
-          'passwd': 'Password01$'
+          username: 'aNewTestUser',
+          passwd: 'Password01$'
         })
-        .expect(HttpCodes.OK, done)
+        .expect(HttpCodes.CREATED, done)
+      ;
+    });
+
+    it('should prevent the creation of a new user with an existing username', function(done) {
+      request
+        .post(`${BASE_URL}/register`)
+        .send({
+          username: 'test',
+          passwd: 'Password01$'
+        })
+        .expect(HttpCodes.CONFLICT, done)
       ;
     });
   });
@@ -78,7 +90,7 @@ describe('Users API tests', function() {
 
       it('should return HTTP 404 (NOT FOUND) if username don\'t exist', function(done) {
         request
-          .get(`${BASE_URL}/Waldo`) // Sadly, the the server didn't find Waldo :'(
+          .get(`${BASE_URL}/Waldo`) // Sadly,  the server didn't find Waldo :'(
           .expect(HttpCodes.NOT_FOUND, done)
         ;
       });
@@ -96,6 +108,7 @@ describe('Users API tests', function() {
             expect(res.body).to.have.property('username').that.is.a('string').that.equals('test');
             expect(res.body).to.have.property('isActive').that.is.a('boolean').that.equals(true, 'The test user should be activated');
             expect(res.body).to.have.property('isAdmin').that.is.a('boolean').that.equals(false, 'test user represents a \'normal\' user for the sake of testing');
+            done();
             // The user object returned by this route will most probably get other fields (like a theme id or name or what not)
           })
         ;
@@ -113,14 +126,6 @@ describe('Users API tests', function() {
       it('should refuse the request of an unauthenticated user', unAuthenticatedTest(BASE_URL));
       it('should refuse an authenticated request from a non-admin user', nonAdminTest(BASE_URL));
 
-      /*it('should refuse an authenticated request from a non-admin user', function(done) {
-        request
-          .get(`${BASE_URL}/`)
-          .set('Authorization', `bearer ${authAdmin.token}`)
-          .expect(HttpCodes.FORBIDDEN, done)
-        ;
-      });*/
-
       it('should accept an admin-authenticated request and return an array of users', function(done) {
         request
           .get(`${BASE_URL}/`)
@@ -130,6 +135,7 @@ describe('Users API tests', function() {
             if (err) return done(err);
 
             expect(res.body).to.be.an('array').that.is.not.empty('With the test users, the users array shouldn\'t be empty');
+            done();
             // NOTE: perhaps add more test to assert that the array content are actually user objects
           })
         ;
@@ -159,6 +165,7 @@ describe('Users API tests', function() {
 
               const newState = res.body.state;
               expect(newState).to.equal(startingState);
+              done();
             })
           ;
         });
@@ -170,7 +177,7 @@ describe('Users API tests', function() {
 
           const startingState = val;
 
-          request
+          request // TODO: Make a hook func or something to revert this modification
             .post(`${BASE_URL}/test/isActive`)
             .set('Authorization', `bearer ${authAdmin.token}`)
             .expect(HttpCodes.OK)
@@ -181,6 +188,9 @@ describe('Users API tests', function() {
               const newState = res.body.newState;
 
               expect(newState).to.not.equal(startingState);
+
+              toggleState('test', 'isActive');
+              done();
             })
           ;
         });
@@ -209,6 +219,8 @@ describe('Users API tests', function() {
 
               const newState = res.body.state;
               expect(newState).to.equal(startingState);
+
+              done();
             })
           ;
         });
@@ -231,6 +243,9 @@ describe('Users API tests', function() {
               const newState = res.body.newState;
 
               expect(newState).to.not.equal(startingState);
+              
+              toggleState('test', 'isAdmin');
+              done();
             })
           ;
         });
@@ -252,6 +267,20 @@ describe('Users API tests', function() {
         ;
       };
     }
+
+    /**
+     * Toggles the `property` state of the user
+     *
+     * @param {*} username user to be changed
+     * @param {*} property the property to toggle
+     */
+    function toggleState(username, property) {
+      request
+        .post(`${BASE_URL}/${username}/${property}`)
+        .set('Authorization', `bearer ${authAdmin.token}`)
+        .expect(HttpCodes.OK)
+      ;
+    }
   });
 
   /**
@@ -271,6 +300,7 @@ describe('Users API tests', function() {
     ;
   }
 
+
   /**
    * Validate a JWT token and returns it's payload upon validation of it
    *
@@ -287,7 +317,7 @@ describe('Users API tests', function() {
     expect(payload).to.have.property('exp').that.is.a('number').greaterThan((new Date()).getTime());
     expect(payload).to.have.property('iat').that.is.a('number');
 
-    expect(payload.exp).to.be.greaterThan(new Date());
+    //expect(payload.exp).to.be.greaterThan(new Date());
 
     return payload;
   }
