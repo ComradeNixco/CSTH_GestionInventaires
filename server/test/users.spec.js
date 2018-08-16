@@ -177,7 +177,7 @@ describe('Users API', function() {
 
           const startingState = val;
 
-          request // TODO: Make a hook func or something to revert this modification
+          request
             .post(`${BASE_URL}/test/isActive`)
             .set('Authorization', `bearer ${authAdmin.token}`)
             .expect(HttpCodes.OK)
