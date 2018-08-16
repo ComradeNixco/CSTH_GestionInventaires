@@ -1,17 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-require('dotenv-safe').config({ allowEmptyValues: true });
-//var path = require('path');
 var cookieParser = require('cookie-parser');
+var express = require('express');
+let fs = require('fs');
+var createError = require('http-errors');
 var logger = require('morgan');
+var path = require('path');
+let rfs = require('rotating-file-stream');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+require('dotenv-safe').config({ allowEmptyValues: true });
 var app = express();
 
 // Mongoose config
-let mongoose = require('mongoose');
+/*let mongoose = require('mongoose');
 
 let mngConnectionStr = 'mongodb://';
 if (process.env.MONGO_USERNAME != '') {
@@ -26,10 +28,37 @@ mongoose.connect(mngConnectionStr, { promiseLibrary: require('bluebird') })
   .catch(err => console.error(err))
 ;
 
-mongoose.connection.on('disconnected', () => console.debug('MongoDB connection closed'));
+mongoose.connection.on('disconnected', () => console.debug('MongoDB connection closed'));*/
+
+// Configuration du logger (Morgan)
+let logDirectory = path.join(__dirname, 'logs');
+// if not existing, create the logs folder
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+
+let logStrm = rfs('access.log', {
+  compress: 'gzip',
+  size: '300B',
+  interval: '1d',
+  path: logDirectory
+});
+
+/**
+ * When a log file is rotated, add the gz extension as they get compressed to that format
+ */
+logStrm.on('rotated', function(filename) {
+  // rotation job completed with success producing given filename
+  fs.renameSync(filename, `${filename}.gz`);
+});
+
+app.use(logger('dev', {
+  skip: (req, res) => res.statusCode < 400
+}));
+app.use(logger('common', {
+  stream: logStrm
+}));
+
 
 // App config
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
