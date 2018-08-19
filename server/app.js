@@ -13,7 +13,7 @@ require('dotenv-safe').config({ allowEmptyValues: true });
 var app = express();
 
 // Mongoose config
-/*let mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
 let mngConnectionStr = 'mongodb://';
 if (process.env.MONGO_USERNAME != '') {
@@ -28,7 +28,7 @@ mongoose.connect(mngConnectionStr, { promiseLibrary: require('bluebird') })
   .catch(err => console.error(err))
 ;
 
-mongoose.connection.on('disconnected', () => console.debug('MongoDB connection closed'));*/
+mongoose.connection.on('disconnected', () => console.debug('MongoDB connection closed'));
 
 // Configuration du logger (Morgan)
 let logDirectory = path.join(__dirname, 'logs');
@@ -44,9 +44,10 @@ let logStrm = rfs('access.log', {
 
 /**
  * When a log file is rotated, add the gz extension as they get compressed to that format
+ * @param {string} filename the filename of the newly archived log file
  */
 logStrm.on('rotated', function(filename) {
-  // rotation job completed with success producing given filename
+  // rotation job completed with success producing given `filename`
   fs.renameSync(filename, `${filename}.gz`);
 });
 
