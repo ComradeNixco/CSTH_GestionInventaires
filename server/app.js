@@ -1,3 +1,4 @@
+require('dotenv-safe').config({ allowEmptyValues: true });
 var cookieParser = require('cookie-parser');
 var express = require('express');
 let fs = require('fs');
@@ -5,33 +6,17 @@ var createError = require('http-errors');
 var logger = require('morgan');
 var path = require('path');
 let rfs = require('rotating-file-stream');
-let debug = require('debug')('app');
+let debug = require('debug')('app:startup');
+
+debug('starting server...');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-require('dotenv-safe').config({ allowEmptyValues: true });
 var app = express();
 
 // Mongoose config
-let mongoose = require('mongoose');
-
-let mngConnectionStr = 'mongodb://';
-if (process.env.MONGO_USERNAME != '') {
-  mngConnectionStr += process.env.MONGO_USERNAME;
-  mngConnectionStr += `:${process.env.MONGO_PASSWD}@`;
-}
-mngConnectionStr += process.env.MONGO_HOST;
-if (process.env.MONGO_PORT != '') mngConnectionStr += `:${process.env.MONGO_PORT}`;
-mngConnectionStr += `/${process.env.MONGO_DB_NAME}`;
-mongoose.connect(mngConnectionStr, {
-  promiseLibrary: require('bluebird'),
-  useNewUrlParser: true
-}).then(() => debug('MongoDB connection successful'))
-  .catch(err => debug(err))
-;
-
-mongoose.connection.on('disconnected', () => debug('MongoDB connection closed'));
+require('./config/mongoose');
 
 // Configuration du logger (Morgan)
 let logDirectory = path.join(__dirname, 'logs');
