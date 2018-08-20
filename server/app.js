@@ -1,8 +1,9 @@
 require('dotenv-safe').config({ allowEmptyValues: true });
 var cookieParser = require('cookie-parser');
-var express = require('express');
 var createError = require('http-errors');
 let debug = require('debug')('app:startup');
+var express = require('express');
+const path = require('path');
 
 debug('starting server...');
 
@@ -13,11 +14,7 @@ var app = express();
 
 // configs
 require('./config/mongoose');
-require('./config/morgan')(app);
-
-// Configuration du logger (Morgan)
-
-
+require('./config/morgan')(app, path.join(__dirname, 'logs'));
 
 // App config
 app.use(express.json());

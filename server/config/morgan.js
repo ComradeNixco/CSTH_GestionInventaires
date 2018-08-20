@@ -1,11 +1,15 @@
 const fs = require('fs');
 const morgan = require('morgan');
-const path = require('path');
 const rfs = require('rotating-file-stream');
 const debug = require('debug')('app:config:morgan');
 
-module.exports = function setupLogging(app) {
-  let logDirectory = path.join(__dirname, 'logs');
+/**
+ * Setups morgan for the Express app logging
+ * @param {Express} app The Express app to configure morgan to
+ * @param {string} logDirectory directory for the logs
+ */
+module.exports = function setupLogging(app, logDirectory) {
+
   // if not existing, create the logs folder
   debug('Creating log directy if not existing');
   fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
