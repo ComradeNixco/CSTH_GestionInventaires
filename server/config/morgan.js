@@ -17,7 +17,7 @@ module.exports = function setupLogging(app, logDirectory) {
 
   let logStrm = rfs('access.log', {
     compress: 'gzip',
-    size: '300B',
+    size: '512M',
     interval: '1d',
     path: logDirectory
   });
