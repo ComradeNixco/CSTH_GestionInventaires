@@ -11,9 +11,6 @@ let cookieParser = require('cookie-parser'),
 
 debug('starting server...');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
 var app = express();
 
 // configs
@@ -28,8 +25,8 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 // Routers
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,38 +1,15 @@
-var express = require('express');
-var router = express.Router();
-let HttpCodes = require('http-status-codes');
+const userController = require('../controllers/users');
+let express = require('express');
+let router = express.Router();
 
 // /users/...
 
-router.get('/', (req, res) => {
-  // TODO: implement this route
-  res.sendStatus(HttpCodes.NOT_IMPLEMENTED);
-});
+router.get('/', userController.getUsers);
+router.get('/:username', userController.getUser);
 
-/* POST a login (attempt) */
-router.post('/login', (req, res) => {
-  // TODO: fill with actual logic
-  res.sendStatus(HttpCodes.NOT_IMPLEMENTED);
-});
-
-router.post('/register', (req, res) => {
-  // TODO: implement this route
-  res.sendStatus(HttpCodes.NOT_IMPLEMENTED);
-});
-
-router.get('/:username', (req, res) => {
-  // TODO: implement this route
-  res.sendStatus(HttpCodes.NOT_IMPLEMENTED);
-});
-
-router.post(':username/isActive', (req, res) => {
-  // TODO: implement this route
-  res.sendStatus(HttpCodes.NOT_IMPLEMENTED);
-});
-
-router.post(':username/isAdmin', (req, res) => {
-  // TODO: implement this route
-  res.sendStatus(HttpCodes.NOT_IMPLEMENTED);
-});
+router.post('/login', userController.login);
+router.post('/register', userController.register);
+router.post(':username/isActive', userController.setIsActive);
+router.post(':username/isAdmin', userController.setIsAdmin);
 
 module.exports = router;
