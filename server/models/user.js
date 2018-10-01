@@ -5,7 +5,7 @@ let mongoose = require('mongoose'),
 /* eslint-enable indent */
 
 // bcrypt's salting rounds number, if not set or 0, set it to a default 11 (~5  hashes/sec on a 2GHz core)
-const SALT_ROUNDS = process.env.BCRYPT_SALT_ROUNDS || 11;
+const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 11;
 
 let UserSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
