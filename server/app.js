@@ -1,9 +1,13 @@
 require('dotenv-safe').config({ allowEmptyValues: true });
-var cookieParser = require('cookie-parser');
-var createError = require('http-errors');
-let debug = require('debug')('app:startup');
-var express = require('express');
-const path = require('path');
+
+/* eslint-disable indent */
+let cookieParser = require('cookie-parser'),
+    createError = require('http-errors'),
+    debug = require('debug')('app:startup'),
+    express = require('express'),
+    path = require('path'),
+    passport = require('passport');
+/* eslint-enable indent */
 
 debug('starting server...');
 
@@ -15,12 +19,15 @@ var app = express();
 // configs
 require('./config/mongoose');
 require('./config/morgan')(app, path.join(__dirname, 'logs'));
+require('./config/passport');
 
 // App config
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.user(passport.initialize());
 
+// Routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
