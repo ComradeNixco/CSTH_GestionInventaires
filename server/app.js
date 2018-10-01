@@ -25,7 +25,7 @@ require('./config/passport');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.user(passport.initialize());
+app.use(passport.initialize());
 
 // Routers
 app.use('/', indexRouter);

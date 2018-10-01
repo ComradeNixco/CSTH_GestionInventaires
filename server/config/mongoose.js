@@ -19,3 +19,6 @@ mongoose.connect(mngConnectionStr, {
 ;
 
 mongoose.connection.on('disconnected', () => debug('MongoDB connection closed'));
+
+// Register the models
+require('../models/user');

@@ -243,7 +243,7 @@ describe('Users API', function() {
               const newState = res.body.newState;
 
               expect(newState).to.not.equal(startingState);
-              
+
               toggleState('test', 'isAdmin');
               done();
             })
