@@ -27,9 +27,9 @@ exports.register = (req, res) => {
 
 
 exports.setIsActive = (req, res) => {
-  res.sendStatus(NOT_IMPLEMENTED);
+  res.sendStatus(errorCodes.NOT_IMPLEMENTED);
 };
 
 exports.setIsAdmin = (req, res) => {
-  res.sendStatus(NOT_IMPLEMENTED);
+  res.sendStatus(errorCodes.NOT_IMPLEMENTED);
 };

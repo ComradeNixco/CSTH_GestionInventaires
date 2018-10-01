@@ -1,0 +1,22 @@
+[
+    {
+        "model": "User",
+        "documents": [
+            {
+                "username": "test",
+                "passwd": "Password01$",
+                "isActive": true
+            },
+            {
+                "username": "test-admin",
+                "passwd": "Password01$",
+                "isActive": true,
+                "isAdmin": true
+            },
+            {
+                "username": "patate",
+                "passwd": "OwO"
+            }
+        ]
+    }
+]
