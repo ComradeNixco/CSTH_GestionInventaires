@@ -7,8 +7,14 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Debug Seeder",
+      "program": "${workspaceFolder}/seeds/index.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Launch server",
-      "program": "${workspaceFolder}/server\\bin\\www",
+      "program": "${workspaceFolder}\\bin\\www",
       "outputCapture": "std"
     }
   ]

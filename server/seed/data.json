@@ -12,10 +12,6 @@
                 "passwd": "Password01$",
                 "isActive": true,
                 "isAdmin": true
-            },
-            {
-                "username": "patate",
-                "passwd": "OwO"
             }
         ]
     }

@@ -33,9 +33,9 @@ module.exports = function setupLogging(app, logDirectory) {
   });
 
   app.use(morgan('dev', {
-    skip: (req, res) => res.statusCode < 400
+    skip: (req, res) => res.statusCode < 400 || (process.env.NODE_ENV && process.env.NODE_ENV === 'test')
   }));
-  app.use(morgan('common', {
+  app.use(morgan('combined', {
     stream: logStrm
   }));
 

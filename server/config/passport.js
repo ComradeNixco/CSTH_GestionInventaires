@@ -5,7 +5,7 @@ let passport = require('passport'),
 /* eslint-enable indent */
 
 passport.use(new LocalStrategy({
-  usernameField: 'email'
+  passwordField: 'passwd'
 }, (username, passwd, done) => {
   User.findOne({ email: username }, (err, user) => {
     if (err) return done(err);
