@@ -50,7 +50,7 @@ UserSchema.methods.generateJwt = function() {
     _id: this._id,
     username: this.username,
     iat: new Date().getTime(),
-    exp: expiry.getDate()
+    exp: expiry.getTime()
   }, process.env.JWT_SECRET);
 };
 

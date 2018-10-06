@@ -7,7 +7,8 @@ let passport = require('passport'),
 passport.use(new LocalStrategy({
   passwordField: 'passwd'
 }, (username, passwd, done) => {
-  User.findOne({ email: username }, (err, user) => {
+  User.findOne({ username: username }, (err, user) => {
+    // TODO: check for the integrity of the Reqest payload here
     if (err) return done(err);
 
     if (!user) return done(null, false, { message: 'User not found' });

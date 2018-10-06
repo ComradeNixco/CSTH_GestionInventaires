@@ -9,8 +9,24 @@ exports.getUsers = (req, res) => {
   res.sendStatus(errorCodes.NOT_IMPLEMENTED);
 };
 
+/**
+ * Logins a user, issuing it a JWT token if login succeeded
+ * @param {Request} req Request object, should have the user property from passport
+ * @param {Response} res Response object
+ */
 exports.login = (req, res) => {
-  res.sendStatus(errorCodes.NOT_IMPLEMENTED);
+  if (!req.user) {
+    res
+      .status(errorCodes.INTERNAL_SERVER_ERROR)
+      .json({error: 'req.user not set in login controller'});
+    return;
+  }
+
+  res
+    .status(errorCodes.OK)
+    .json({
+      token: req.user.generateJwt()
+    });
 };
 
 /**
@@ -27,7 +43,7 @@ exports.register = (req, res) => {
   new User({
     username: req.body.username,
     passwd: req.body.passwd
-    // isActive has to ber manually setted by an admin
+    // isActive has to be manually setted by an admin
   }).save(err => {
     if (err && err.code && err.code === 11000) {
       res
