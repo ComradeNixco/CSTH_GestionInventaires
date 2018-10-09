@@ -5,15 +5,14 @@ env:
 
 extends: 'eslint:recommended'
 parserOptions:
-  ecmaVersion: 6
+  ecmaVersion: 2018
   sourceType: module
 rules:
   indent:
     - warn
     - 2
   linebreak-style:
-    - warn
-    - unix
+    - off
   quotes:
     - error
     - single

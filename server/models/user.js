@@ -49,8 +49,10 @@ UserSchema.methods.generateJwt = function() {
   return jwt.sign({
     _id: this._id,
     username: this.username,
-    iat: new Date().getTime(),
-    exp: expiry.getTime()
+    isAdmin: this.isAdmin,
+    isActive: this.isActive,
+    iat: Date.now(),
+    exp: Math.floor(Date.now() / 1000) + (2 * 60 * 60),
   }, process.env.JWT_SECRET);
 };
 
