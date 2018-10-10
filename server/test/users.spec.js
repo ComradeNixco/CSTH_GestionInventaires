@@ -81,11 +81,11 @@ describe('Users API', function() {
     });
   });
 
-  describe('Authenticated routes (non-admin)', function() {
+  /*describe('Authenticated routes (non-admin)', function() {
     let auth = {};
     before(login('test', 'Password01$', auth));
 
-    describe('GET /users/:username', function() {
+    /*describe('GET /users/:username', function() {
       it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test`));
 
       it('should return HTTP 404 (NOT FOUND) if username don\'t exist', function(done) {
@@ -114,7 +114,7 @@ describe('Users API', function() {
         ;
       });
     });
-  });
+  });*/
 
   describe('Authenticated routes (Admin)', function() {
     let authAdmin = {};

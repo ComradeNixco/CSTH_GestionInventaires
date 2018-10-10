@@ -5,14 +5,14 @@ const passport = require('passport');
 const userAccessMiddlewares = require('../middlewares/userAccess');
 
 // /users/...
-let isAdmin = [
+let isAdminMiddlewares = [
   userAccessMiddlewares.hasToken,
   userAccessMiddlewares.isActive,
   userAccessMiddlewares.isAdmin,
 ];
 
 router.get('/',
-  ...isAdmin,
+  ...isAdminMiddlewares,
   userController.getUsers
 );
 
@@ -23,11 +23,11 @@ router.post('/login',
 router.post('/register', userController.register);
 
 router.post(':username/isActive',
-  ...isAdmin,
+  ...isAdminMiddlewares,
   userController.setIsActive
 );
 router.post(':username/isAdmin',
-  ...isAdmin,
+  ...isAdminMiddlewares,
   userController.setIsAdmin
 );
 

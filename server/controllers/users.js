@@ -1,12 +1,29 @@
 const errorCodes = require('http-status-codes');
 const User = require('../models/user');
 
-exports.getUser = (req, res) => {
+/*exports.getUser = (req, res) => {
   res.sendStatus(errorCodes.NOT_IMPLEMENTED);
-};
+};*/
 
+/**
+ * Gets an up-to-date lists of all the users
+ */
 exports.getUsers = (req, res) => {
-  res.sendStatus(errorCodes.NOT_IMPLEMENTED);
+  User.find({}, (err, users) => {
+    if (err) {
+      res
+        .status(errorCodes.INTERNAL_SERVER_ERROR)
+        .json({
+          error: err
+        })
+      ;
+    }
+
+    res
+      .status(errorCodes.OK)
+      .json(users)
+    ;
+  });
 };
 
 /**
