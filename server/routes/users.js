@@ -1,4 +1,4 @@
-const userController = require('../controllers/users');
+let userController = require('../controllers/users');
 let express = require('express');
 let router = express.Router();
 const passport = require('passport');
@@ -22,13 +22,13 @@ router.post('/login',
 );
 router.post('/register', userController.register);
 
-router.post(':username/isActive',
+router.post('/:username/isActive',
   ...isAdminMiddlewares,
   userController.toggleIsActive
 );
-router.post(':username/isAdmin',
+router.post('/:username/isAdmin',
   ...isAdminMiddlewares,
-  userController.setIsAdmin
+  userController.toggleIsAdmin
 );
 
 module.exports = router;

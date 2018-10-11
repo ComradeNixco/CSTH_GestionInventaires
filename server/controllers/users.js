@@ -72,11 +72,12 @@ exports.register = (req, res) => {
 
 
 exports.toggleIsActive = (req, res) => {
-  if (!req.body.username) {
+  if (!req.params.username) {
     res.sendStatus(httpCodes.INTERNAL_SERVER_ERROR);
+    return;
   }
 
-  User.findOne({username: req.body.username}, async(err, user) => {
+  User.findOne({username: req.params.username}, async(err, user) => {
     if (err) {
       res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
       return;
@@ -106,11 +107,12 @@ exports.toggleIsActive = (req, res) => {
 };
 
 exports.toggleIsAdmin = (req, res) => {
-  if (!req.body.username) {
+  if (!req.params.username) {
     res.sendStatus(httpCodes.INTERNAL_SERVER_ERROR);
+    return;
   }
 
-  User.findOne({username: req.body.username}, async(err, user) => {
+  User.findOne({username: req.params.username}, async(err, user) => {
     if (err) {
       res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
       return;

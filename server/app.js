@@ -15,7 +15,8 @@ var app = express();
 
 // configs
 require('./config/mongoose');
-require('./config/morgan')(app, path.join(__dirname, 'logs'));
+if (process.env.NODE_ENV !== 'test')
+  require('./config/morgan')(app, path.join(__dirname, 'logs'));
 require('./config/passport');
 
 // App config
@@ -34,14 +35,16 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+if (process.env.NODE_ENV !== 'test') {
+  app.use(function(err, req, res) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+  });
+}
 
 module.exports = app;
