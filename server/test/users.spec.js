@@ -145,6 +145,7 @@ describe('Users API', function() {
     describe('POST /users/:username/isActive', function () {
       it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isActive`));
       it('should refuse to proceed if asking user isn\'t admin', nonAdminTest(`${BASE_URL}/test/isActive`));
+      it('should refuse to proceed when asked to change status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isActive`));
 
       // In this test it is assumed that test-admin is the only admin user hence the last one
       it('should refuse to deactivate the last admin user', function(done) {
@@ -200,6 +201,7 @@ describe('Users API', function() {
     describe('POST /users/:username/isAdmin', function() {
       it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isAdmin`));
       it('should refuse to proceed if asking user isn\'t an admin', nonAdminTest(`${BASE_URL}/test/isAdmin`));
+      it('should refuse to proceed when asked to change status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isAdmin`));
 
       it('should refuse to "un-admin" the last admin user', function(done) {
         getUserInfo('test-admin', 'isAdmin', function(err, val) {
@@ -265,6 +267,21 @@ describe('Users API', function() {
           .set('Authorization', `bearer ${authUser.token}`)
           .expect(HttpCodes.FORBIDDEN, done)
         ;
+      };
+    }
+
+    /**
+     * Prepare a test callback to test if a modifying a non-existing user will return a 404 (Not Found) when trying to change the state
+     *
+     * @param {*} route The route to test
+     * @returns {Mocha.Func} The prepared test
+     */
+    function nonExistingUserTest(route) {
+      return function(done) {
+        request
+          .post(route)
+          .set('Authorization', `bearer ${authAdmin.token}`)
+          .expect(HttpCodes.NOT_FOUND, done);
       };
     }
 
