@@ -1,4 +1,4 @@
-const errorCodes = require('http-status-codes');
+const httpCodes = require('http-status-codes');
 const User = require('../models/user');
 
 /*exports.getUser = (req, res) => {
@@ -12,17 +12,12 @@ exports.getUsers = (req, res) => {
   User.find({}, (err, users) => {
     if (err) {
       res
-        .status(errorCodes.INTERNAL_SERVER_ERROR)
-        .json({
-          error: err
-        })
-      ;
+        .status(httpCodes.INTERNAL_SERVER_ERROR)
+        .json({error: err});
+      return;
     }
 
-    res
-      .status(errorCodes.OK)
-      .json(users)
-    ;
+    res.status(httpCodes.OK).json(users);
   });
 };
 
@@ -34,13 +29,13 @@ exports.getUsers = (req, res) => {
 exports.login = (req, res) => {
   if (!req.user) {
     res
-      .status(errorCodes.INTERNAL_SERVER_ERROR)
+      .status(httpCodes.INTERNAL_SERVER_ERROR)
       .json({error: 'req.user not set in login controller'});
     return;
   }
 
   res
-    .status(errorCodes.OK)
+    .status(httpCodes.OK)
     .json({
       token: req.user.generateJwt()
     });
@@ -53,7 +48,7 @@ exports.login = (req, res) => {
  */
 exports.register = (req, res) => {
   if (req.body.username == null || req.body.passwd == null) {
-    res.sendStatus(errorCodes.BAD_REQUEST);
+    res.sendStatus(httpCodes.BAD_REQUEST);
     return;
   }
 
@@ -64,23 +59,54 @@ exports.register = (req, res) => {
   }).save(err => {
     if (err && err.code && err.code === 11000) {
       res
-        .status(errorCodes.CONFLICT)
+        .status(httpCodes.CONFLICT)
         .json({
           message: 'Username already used'
         });
       return;
     }
 
-    // TODO Finish implementation and then remove next line
-    res.sendStatus(errorCodes.CREATED);
+    res.sendStatus(httpCodes.CREATED);
   });
 };
 
 
 exports.setIsActive = (req, res) => {
-  res.sendStatus(errorCodes.NOT_IMPLEMENTED);
+  if (!req.body.username) {
+    res.sendStatus(httpCodes.INTERNAL_SERVER_ERROR);
+  }
+
+  User.findOne({username: req.body.username}, async(err, user) => {
+    if (err) {
+      res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
+      return;
+    }
+
+    if (user === null) {
+      res.sendStatus(httpCodes.NOT_FOUND);
+      return;
+    }
+
+    if (await User.countDocuments({ isAdmin: true }) === 1 && user.isAdmin) {
+      res
+        .send(httpCodes.CONFLICT)
+        .json({
+          state: user.isActive,
+          conflictReason: 'This user is the last admin, it cannot be deactivated'
+        });
+      return;
+    }
+
+    user.isActive = !user.isActive;
+    user.save();
+    res.json({
+      newState: user.isActive
+    });
+  });
+
+  res.send(httpCodes.NOT_IMPLEMENTED);
 };
 
 exports.setIsAdmin = (req, res) => {
-  res.sendStatus(errorCodes.NOT_IMPLEMENTED);
+  res.sendStatus(httpCodes.NOT_IMPLEMENTED);
 };
