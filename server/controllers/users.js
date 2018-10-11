@@ -71,7 +71,7 @@ exports.register = (req, res) => {
 };
 
 
-exports.setIsActive = (req, res) => {
+exports.toggleIsActive = (req, res) => {
   if (!req.body.username) {
     res.sendStatus(httpCodes.INTERNAL_SERVER_ERROR);
   }
@@ -107,6 +107,6 @@ exports.setIsActive = (req, res) => {
   res.send(httpCodes.NOT_IMPLEMENTED);
 };
 
-exports.setIsAdmin = (req, res) => {
+exports.toggleIsAdmin = (req, res) => {
   res.sendStatus(httpCodes.NOT_IMPLEMENTED);
 };

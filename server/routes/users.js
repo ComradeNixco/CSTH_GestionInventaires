@@ -24,7 +24,7 @@ router.post('/register', userController.register);
 
 router.post(':username/isActive',
   ...isAdminMiddlewares,
-  userController.setIsActive
+  userController.toggleIsActive
 );
 router.post(':username/isAdmin',
   ...isAdminMiddlewares,
