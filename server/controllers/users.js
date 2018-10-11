@@ -103,10 +103,38 @@ exports.toggleIsActive = (req, res) => {
       newState: user.isActive
     });
   });
-
-  res.send(httpCodes.NOT_IMPLEMENTED);
 };
 
 exports.toggleIsAdmin = (req, res) => {
-  res.sendStatus(httpCodes.NOT_IMPLEMENTED);
+  if (!req.body.username) {
+    res.sendStatus(httpCodes.INTERNAL_SERVER_ERROR);
+  }
+
+  User.findOne({username: req.body.username}, async(err, user) => {
+    if (err) {
+      res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
+      return;
+    }
+
+    if (user === null) {
+      res.sendStatus(httpCodes.NOT_FOUND);
+      return;
+    }
+
+    if (await User.countDocuments({ isAdmin: true }) === 1 && user.isAdmin) {
+      res
+        .send(httpCodes.CONFLICT)
+        .json({
+          state: user.isAdmin,
+          conflictReason: 'This user is the last admin, it cannot be stripped of it\'s admin rights'
+        });
+      return;
+    }
+
+    user.isAdmin = !user.isAdmin;
+    user.save();
+    res.json({
+      newState: user.isAdmin
+    });
+  });
 };
