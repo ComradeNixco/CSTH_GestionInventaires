@@ -1,3 +1,5 @@
-POST http://127.0.0.1:3000/users/test/isActive
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmJkMDgwNDAwN2E1ODM2NzAzNmRiNDUiLCJ1c2VybmFtZSI6InRlc3QtYWRtaW4iLCJpc0FkbWluIjp0cnVlLCJpc0FjdGl2ZSI6dHJ1ZSwiaWF0IjoxNTM5MjMzMDg0NDYwLCJleHAiOjE1MzkyNDAyODR9.idwtQIltR_WFAtRVuhtXchmUU2fnKAGmml7t1k7oQG4
+
+# Token has to be refreshed and replaced with the login route for this test call to work as intended
+POST http://127.0.0.1:3000/users/test-admin/isActive
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmJkMDgwNDAwN2E1ODM2NzAzNmRiNDUiLCJ1c2VybmFtZSI6InRlc3QtYWRtaW4iLCJpc0FkbWluIjp0cnVlLCJpc0FjdGl2ZSI6dHJ1ZSwiaWF0IjoxNTM5NjM5MjM0LCJleHAiOjE1Mzk2NDY0MzR9.r2I_-6X8nBbtquxc-BrNj4eUtajjGShQGt_pw14WbDQ
 

@@ -1,9 +1,38 @@
 const httpCodes = require('http-status-codes');
 const User = require('../models/user');
 
-/*exports.getUser = (req, res) => {
-  res.sendStatus(errorCodes.NOT_IMPLEMENTED);
-};*/
+exports.getUserInfo = (req, res) => {
+  const userName = req.params.username,
+        property = req.params.property;
+  if (!userName || !property) {
+    res.status(httpCodes.BAD_REQUEST).json({
+      msg: 'wrong route parameter values',
+      username: userName,
+      property: property
+    });
+    return;
+  }
+
+  if (![ 'isActive', 'isAdmin' ].includes(property)) {
+    res.status(httpCodes.BAD_REQUEST).json({
+      msg: 'Property value must be either "isAdmin" or "isActive"',
+      property: property
+    });
+    return;
+  }
+
+  User.findOne({username: userName}, (err, user) => {
+    if (err) {
+      res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
+      return;
+    }
+
+    if (user)
+      res.json(user[property]);
+    else
+      res.sendStatus(httpCodes.NOT_FOUND);
+  });
+};
 
 /**
  * Gets an up-to-date lists of all the users
@@ -77,7 +106,7 @@ exports.toggleIsActive = (req, res) => {
     return;
   }
 
-  User.findOne({username: req.params.username}, async(err, user) => {
+  User.findOne({username: req.params.username}, (err, user) => {
     if (err) {
       res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
       return;
@@ -88,20 +117,27 @@ exports.toggleIsActive = (req, res) => {
       return;
     }
 
-    if (await User.countDocuments({ isAdmin: true }) === 1 && user.isAdmin) {
-      res
-        .send(httpCodes.CONFLICT)
-        .json({
-          state: user.isActive,
-          conflictReason: 'This user is the last admin, it cannot be deactivated'
-        });
-      return;
-    }
+    User.countDocuments({isAdmin: true}, (err, adminCount) => {
+      if (err) {
+        res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
+        return;
+      }
 
-    user.isActive = !user.isActive;
-    user.save();
-    res.json({
-      newState: user.isActive
+      if (adminCount === 1 && user.isAdmin) {
+        res
+          .status(httpCodes.CONFLICT)
+          .json({
+            state: user.isActive,
+            conflictReason: 'This user is the last admin, it cannot be deactivated'
+          });
+        return;
+      }
+
+      user.isActive = !user.isActive;
+      user.save();
+      res.json({
+        newState: user.isActive
+      });
     });
   });
 };
@@ -112,7 +148,7 @@ exports.toggleIsAdmin = (req, res) => {
     return;
   }
 
-  User.findOne({username: req.params.username}, async(err, user) => {
+  User.findOne({username: req.params.username}, (err, user) => {
     if (err) {
       res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
       return;
@@ -123,20 +159,25 @@ exports.toggleIsAdmin = (req, res) => {
       return;
     }
 
-    if (await User.countDocuments({ isAdmin: true }) === 1 && user.isAdmin) {
-      res
-        .send(httpCodes.CONFLICT)
-        .json({
-          state: user.isAdmin,
-          conflictReason: 'This user is the last admin, it cannot be stripped of it\'s admin rights'
-        });
-      return;
-    }
+    User.countDocuments({isAdmin: true}, (err, count) => {
+      if (err) {
+        res.status(httpCodes.INTERNAL_SERVER_ERROR).json(err);
+        return;
+      }
 
-    user.isAdmin = !user.isAdmin;
-    user.save();
-    res.json({
-      newState: user.isAdmin
+      if (count === 1 && user.isAdmin) {
+        res.status(httpCodes.CONFLICT).json({
+          state: user.isAdmin,
+          conflictReason: 'This user is the last admin, it cannot be stripped of it\'s rights'
+        });
+        return;
+      }
+
+      user.isAdmin = !user.isAdmin;
+      user.save();
+      res.json({
+        newState: user.isAdmin
+      });
     });
   });
 };

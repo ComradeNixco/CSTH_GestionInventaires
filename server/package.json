@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "$env:NODE_ENV='test'; & mocha test\\*.spec.js",
+    "test": "$env:NODE_ENV='test'; & node ./node_modules\\mocha\\bin\\_mocha --timeout 999999 test\\*.spec.js",
     "seed": "node ./seed/index.js"
   },
   "dependencies": {

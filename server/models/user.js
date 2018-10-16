@@ -43,17 +43,13 @@ UserSchema.methods.comparePassword = function(plainText, cb) {
 };
 
 UserSchema.methods.generateJwt = function() {
-  var expiry = new Date();
-  expiry.setDate(expiry.getDate() + 7);
-
   return jwt.sign({
     _id: this._id,
     username: this.username,
     isAdmin: this.isAdmin,
     isActive: this.isActive,
-    iat: Date.now(),
-    exp: Math.floor(Date.now() / 1000) + (2 * 60 * 60),
-  }, process.env.JWT_SECRET);
+    iat: Math.floor(Date.now() / 1000 ),
+  }, process.env.JWT_SECRET, {expiresIn: 2 * 60 * 60});
 };
 
 module.exports = mongoose.model('User', UserSchema);

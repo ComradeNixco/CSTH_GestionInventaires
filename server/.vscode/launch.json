@@ -16,6 +16,18 @@
       "name": "Launch server",
       "program": "${workspaceFolder}\\bin\\www",
       "outputCapture": "std"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Server's test(s)",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+          "--timeout",
+          "999999",
+          "--colors",
+          "${workspaceFolder}/test"
+      ]
     }
   ]
 }

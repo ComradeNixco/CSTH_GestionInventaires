@@ -16,6 +16,11 @@ router.get('/',
   userController.getUsers
 );
 
+router.get('/:username/:property',
+  ...isAdminMiddlewares,
+  userController.getUserInfo
+);
+
 router.post('/login',
   passport.authenticate('local', { session: false }),
   userController.login

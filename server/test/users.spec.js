@@ -81,11 +81,11 @@ describe('Users API', function() {
     });
   });
 
-  /*describe('Authenticated routes (non-admin)', function() {
+  describe('Authenticated routes (non-admin)', function() {
     let auth = {};
     before(login('test', 'Password01$', auth));
 
-    /*describe('GET /users/:username', function() {
+    describe('GET /users/:username', function() {
       it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test`));
 
       it('should return HTTP 404 (NOT FOUND) if username don\'t exist', function(done) {
@@ -114,7 +114,7 @@ describe('Users API', function() {
         ;
       });
     });
-  });*/
+  });
 
   describe('Authenticated routes (Admin)', function() {
     let authAdmin = {};
@@ -129,12 +129,12 @@ describe('Users API', function() {
       it('should accept an admin-authenticated request and return an array of users', function(done) {
         request
           .get(`${BASE_URL}/`)
-          .set('Authorization', `bearer ${authAdmin.token}`)
+          .set('Authorization', `Bearer ${authAdmin.token}`)
           .expect(HttpCodes.OK)
           .end((err, res) => {
             if (err) return done(err);
 
-            expect(res.body).to.be.an('array').that.is.not.empty('With the test users, the users array shouldn\'t be empty');
+            expect(res.body).to.be.an('array').that.is.not.empty;
             done();
             // NOTE: perhaps add more test to assert that the array content are actually user objects
           })
@@ -156,7 +156,7 @@ describe('Users API', function() {
 
           request
             .post(`${BASE_URL}/test-admin/isActive`)
-            .set('Authorization', `bearer ${authAdmin.token}`)
+            .set('Authorization', `Bearer ${authAdmin.token}`)
             .expect(HttpCodes.CONFLICT) // if a better error code could be use this should be replaced with that "better" one, also if it happens the payload assertion should be change to reflect that modification
             .end(function(er, res) {
               if (er) return done(er);
@@ -180,7 +180,7 @@ describe('Users API', function() {
 
           request
             .post(`${BASE_URL}/test/isActive`)
-            .set('Authorization', `bearer ${authAdmin.token}`)
+            .set('Authorization', `Bearer ${authAdmin.token}`)
             .expect(HttpCodes.OK)
             .end(function(er, res) {
               if (er) return done(er);
@@ -211,13 +211,13 @@ describe('Users API', function() {
 
           request
             .post(`${BASE_URL}/test-admin/isAdmin`)
-            .set('Authorization', `bearer ${authAdmin.token}`)
+            .set('Authorization', `Bearer ${authAdmin.token}`)
             .expect(HttpCodes.CONFLICT) // if a better error code could be use this should be replaced with that "better" one, also if it happens the payload assertion should be change to reflect that modification
             .end(function(er, res) {
               if (er) return done(er);
 
               expect(res.body).to.have.property('state').that.is.a('boolean');
-              expect(res.body).to.have.property('conflictReason').that.is.a('string').which.equals('This user is the last admin, it cannot be stripped of it\' admin rights');
+              expect(res.body).to.have.property('conflictReason').that.is.a('string').which.equals('This user is the last admin, it cannot be stripped of it\'s admin rights');
 
               const newState = res.body.state;
               expect(newState).to.equal(startingState);
@@ -236,7 +236,7 @@ describe('Users API', function() {
 
           request
             .post(`${BASE_URL}/test/isAdmin`)
-            .set('Authorization', `bearer ${authAdmin.token}`)
+            .set('Authorization', `Bearer ${authAdmin.token}`)
             .expect(HttpCodes.OK)
             .end(function(e, res) {
               if (e) return done(e);
@@ -264,7 +264,7 @@ describe('Users API', function() {
       return function(done) {
         request
           .get(route)
-          .set('Authorization', `bearer ${authUser.token}`)
+          .set('Authorization', `Bearer ${authUser.token}`)
           .expect(HttpCodes.FORBIDDEN, done)
         ;
       };
@@ -280,7 +280,7 @@ describe('Users API', function() {
       return function(done) {
         request
           .post(route)
-          .set('Authorization', `bearer ${authAdmin.token}`)
+          .set('Authorization', `Bearer ${authAdmin.token}`)
           .expect(HttpCodes.NOT_FOUND, done);
       };
     }
@@ -294,7 +294,7 @@ describe('Users API', function() {
     function toggleState(username, property) {
       request
         .post(`${BASE_URL}/${username}/${property}`)
-        .set('Authorization', `bearer ${authAdmin.token}`)
+        .set('Authorization', `Bearer ${authAdmin.token}`)
         .expect(HttpCodes.OK)
       ;
     }
@@ -331,7 +331,7 @@ describe('Users API', function() {
     let b64 = body.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
     let payload = JSON.parse(atob(b64));
     expect(payload).to.have.property('username').that.is.a('string');
-    expect(payload).to.have.property('exp').that.is.a('number').greaterThan((new Date()).getTime());
+    expect(payload).to.have.property('exp').that.is.a('number').greaterThan(Math.floor(Date.now() / 1000));
     expect(payload).to.have.property('iat').that.is.a('number');
 
     //expect(payload.exp).to.be.greaterThan(new Date());
