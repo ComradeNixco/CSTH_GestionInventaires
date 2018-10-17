@@ -258,8 +258,26 @@ describe('Users API', function() {
       it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isAdmin`));
       it('should refuse to proceed if asking user isn\'t an admin', nonAdminTest(`${BASE_URL}/test/isAdmin`));
       it('should refuse to proceed when asked to give status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isAdmin`, 'get'));
+      it('should refuse to proceed when asked to give the value of a non existing property of a user', function(done) {
+        request
+          .get(`${BASE_URL}/test/nonExistingProp`)
+          .set('Authorization', `Bearer ${authAdmin.token}`)
+          .expect(HttpCodes.BAD_REQUEST, done)
+        ;
+      });
+      it('should return the value of the asked value of the user\'s property when asked by an admin', function(done) {
+        request
+          .get(`${BASE_URL}/test/isAdmin`)
+          .set('Authorization', `Bearer ${authAdmin.token}`)
+          .expect(HttpCodes.OK)
+          .end(function(err, res) {
+            if (err) return done(err);
 
-      //it()
+            expect(res.body).to.be.a('boolean').that.equals(false);
+            done();
+          })
+        ;
+      });
     });
 
     /**
