@@ -2,8 +2,10 @@ const httpCodes = require('http-status-codes');
 const User = require('../models/user');
 
 exports.getUserInfo = (req, res) => {
+  /* eslint-disable indent */
   const userName = req.params.username,
         property = req.params.property;
+  /* eslint_enable indent */
   if (!userName || !property) {
     res.status(httpCodes.BAD_REQUEST).json({
       msg: 'wrong route parameter values',

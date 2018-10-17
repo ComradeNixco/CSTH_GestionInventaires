@@ -143,7 +143,7 @@ describe('Users API', function() {
     });
 
     describe('POST /users/:username/isActive', function () {
-      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isActive`));
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isActive`, 'post'));
       it('should refuse to proceed if asking user isn\'t admin', nonAdminTest(`${BASE_URL}/test/isActive`));
       it('should refuse to proceed when asked to change status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isActive`));
 
@@ -199,7 +199,7 @@ describe('Users API', function() {
     });
 
     describe('POST /users/:username/isAdmin', function() {
-      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isAdmin`));
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isAdmin`, 'post'));
       it('should refuse to proceed if asking user isn\'t an admin', nonAdminTest(`${BASE_URL}/test/isAdmin`));
       it('should refuse to proceed when asked to change status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isAdmin`));
 
@@ -254,6 +254,14 @@ describe('Users API', function() {
       });
     });
 
+    describe('GET /users/:username/:property', function() {
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isAdmin`));
+      it('should refuse to proceed if asking user isn\'t an admin', nonAdminTest(`${BASE_URL}/test/isAdmin`));
+      it('should refuse to proceed when asked to give status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isAdmin`, 'get'));
+
+      //it()
+    });
+
     /**
      * Prepare a test callback to test if a non-admin user gets HTTP 403 (Forbidden) when trying to do admin actions
      *
@@ -276,10 +284,9 @@ describe('Users API', function() {
      * @param {*} route The route to test
      * @returns {Mocha.Func} The prepared test
      */
-    function nonExistingUserTest(route) {
+    function nonExistingUserTest(route, method = 'post') {
       return function(done) {
-        request
-          .post(route)
+        request[method](route)
           .set('Authorization', `Bearer ${authAdmin.token}`)
           .expect(HttpCodes.NOT_FOUND, done);
       };
@@ -309,10 +316,10 @@ describe('Users API', function() {
    */
   function getUserInfo(username, infoName, cb) {
     request
-      .get(`${BASE_URL}/${username}`)
+      .get(`${BASE_URL}/${username}/${infoName}`)
       .expect(HttpCodes.OK)
       .end(function(err, res){
-        cb(err, res.body[infoName]);
+        cb(err, res.body);
       })
     ;
   }
@@ -368,12 +375,12 @@ describe('Users API', function() {
      * Prepare a test callback to test if an unauthenticated user gets HTTP 401 (UNAUTHORIZED) when trying to do protected actions or accessing protected ressources
      *
      * @param {*} route The route to test
+     * @param {string} method http method to use
      * @returns {Mocha.Func} The prepared test callback
      */
-  function unAuthenticatedTest(route) {
+  function unAuthenticatedTest(route, method = 'get') {
     return function(done) {
-      request
-        .get(route)
+      request[method](route)
         .expect(HttpCodes.UNAUTHORIZED, done)
       ;
     };

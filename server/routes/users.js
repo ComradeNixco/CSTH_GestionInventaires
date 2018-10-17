@@ -11,11 +11,11 @@ let isAdminMiddlewares = [
   userAccessMiddlewares.isAdmin,
 ];
 
+
 router.get('/',
   ...isAdminMiddlewares,
   userController.getUsers
 );
-
 router.get('/:username/:property',
   ...isAdminMiddlewares,
   userController.getUserInfo
@@ -26,7 +26,6 @@ router.post('/login',
   userController.login
 );
 router.post('/register', userController.register);
-
 router.post('/:username/isActive',
   ...isAdminMiddlewares,
   userController.toggleIsActive
