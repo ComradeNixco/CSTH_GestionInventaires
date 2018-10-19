@@ -5,9 +5,9 @@ const httpCodes = require('http-status-codes');
 let jwt = require('express-jwt');
 module.exports.hasToken = jwt({
   secret: process.env.JWT_SECRET,
-  getToken: req => {
+  /*getToken: req => {
     return req.get('Authorization').split('Bearer ')[1];
-  }
+  }*/
 });
 
 /**

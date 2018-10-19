@@ -81,50 +81,33 @@ describe('Users API', function() {
     });
   });
 
-  describe('Authenticated routes (non-admin)', function() {
-    let auth = {};
-    before(login('test', 'Password01$', auth));
-
-    describe('GET /users/:username', function() {
-      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test`));
-
-      it('should return HTTP 404 (NOT FOUND) if username don\'t exist', function(done) {
-        request
-          .get(`${BASE_URL}/Waldo`) // Sadly,  the server didn't find Waldo :'(
-          .expect(HttpCodes.NOT_FOUND, done)
-        ;
-      });
-
-      it('should return a valid user object with HTTP 200 ', function(done) {
-        request
-          .get(`${BASE_URL}/test`)
-          .set('Authorization', `bearer ${auth.token}`)
-          .expect(HttpCodes.OK)
-          .expect('Content-Type', /json/)
-          .end((err, res) => {
-            if (err) return done(err);
-
-            expect(res.body).to.have.property('_id');
-            expect(res.body).to.have.property('username').that.is.a('string').that.equals('test');
-            expect(res.body).to.have.property('isActive').that.is.a('boolean').that.equals(true, 'The test user should be activated');
-            expect(res.body).to.have.property('isAdmin').that.is.a('boolean').that.equals(false, 'test user represents a \'normal\' user for the sake of testing');
-            done();
-            // The user object returned by this route will most probably get other fields (like a theme id or name or what not)
-          })
-        ;
-      });
-    });
-  });
-
   describe('Authenticated routes (Admin)', function() {
     let authAdmin = {};
     let authUser = {};
     before(login('test-admin', 'Password01$', authAdmin));
     before(login('test', 'Password01$', authUser));
 
+    /**
+   * Gets the User's asked info from the Express App
+   *
+   * @param {string} username
+   * @param {string} infoname name of the wanted property in the User object
+   * @param {(err, val)=>void} cb A callback to call to handle the value of the asked information
+   */
+    function getUserInfo(username, infoName, cb) {
+      request
+        .get(`${BASE_URL}/${username}/${infoName}`)
+        .set('Authorization', `Bearer ${authAdmin.token}`)
+        .expect(HttpCodes.OK)
+        .end(function(err, res){
+          cb(err, res.body);
+        })
+      ;
+    }
+
     describe('GET /users', function() {
-      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(BASE_URL));
-      it('should refuse an authenticated request from a non-admin user', nonAdminTest(BASE_URL));
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/`));
+      it('should refuse an authenticated request from a non-admin user', nonAdminTest(`${BASE_URL}/`));
 
       it('should accept an admin-authenticated request and return an array of users', function(done) {
         request
@@ -143,9 +126,9 @@ describe('Users API', function() {
     });
 
     describe('POST /users/:username/isActive', function () {
-      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isActive`, 'post'));
-      it('should refuse to proceed if asking user isn\'t admin', nonAdminTest(`${BASE_URL}/test/isActive`));
-      it('should refuse to proceed when asked to change status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isActive`));
+      it('should refuse the request of an unauthenticated user', unAuthenticatedTest(`${BASE_URL}/test/isActive/`, 'post'));
+      it('should refuse to proceed if asking user isn\'t admin', nonAdminTest(`${BASE_URL}/test/isActive/`));
+      it('should refuse to proceed when asked to change status of a non existing user', nonExistingUserTest(`${BASE_URL}/NonExistingUser/isActive/`));
 
       // In this test it is assumed that test-admin is the only admin user hence the last one
       it('should refuse to deactivate the last admin user', function(done) {
@@ -320,27 +303,10 @@ describe('Users API', function() {
       request
         .post(`${BASE_URL}/${username}/${property}`)
         .set('Authorization', `Bearer ${authAdmin.token}`)
-        .expect(HttpCodes.OK)
+        .expect(HttpCodes.OK, () => {})
       ;
     }
   });
-
-  /**
-   * Gets the User's asked info from the Express App
-   *
-   * @param {string} username
-   * @param {string} infoname name of the wanted property in the User object
-   * @param {(err, val)=>void} cb A callback to call to handle the value of the asked information
-   */
-  function getUserInfo(username, infoName, cb) {
-    request
-      .get(`${BASE_URL}/${username}/${infoName}`)
-      .expect(HttpCodes.OK)
-      .end(function(err, res){
-        cb(err, res.body);
-      })
-    ;
-  }
 
 
   /**

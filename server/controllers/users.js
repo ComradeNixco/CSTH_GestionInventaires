@@ -170,7 +170,7 @@ exports.toggleIsAdmin = (req, res) => {
       if (count === 1 && user.isAdmin) {
         res.status(httpCodes.CONFLICT).json({
           state: user.isAdmin,
-          conflictReason: 'This user is the last admin, it cannot be stripped of it\'s rights'
+          conflictReason: 'This user is the last admin, it cannot be stripped of it\'s admin rights'
         });
         return;
       }
