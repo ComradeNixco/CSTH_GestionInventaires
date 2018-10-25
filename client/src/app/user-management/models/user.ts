@@ -1,8 +1,20 @@
+/**
+ * Represents the Token html response from the login API route
+ *
+ * @export
+ * @interface TokenResponse
+ */
 export interface TokenResponse {
   token: string;
 }
 
-export class UserToken {
+/**
+ * User model, representation of the info contained in the JWT token format returned by the API
+ *
+ * @export
+ * @class User
+ */
+export class User {
   private _username: string;
   public get username(): string {
     return this._username;
@@ -25,5 +37,13 @@ export class UserToken {
   }
   public set isAdmin(v: boolean) {
     this._isAdmin = v;
+  }
+
+  private _exp: number;
+  public get exp(): number {
+    return this._exp;
+  }
+  public set exp(v: number) {
+    this._exp = v;
   }
 }
