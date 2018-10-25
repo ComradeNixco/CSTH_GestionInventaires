@@ -39,6 +39,13 @@ export class User {
     this._isAdmin = v;
   }
 
+  /**
+   * Expiration date of the token linked with this user, if this instance is the current user (logged-in by the API)
+   *
+   * @private
+   * @type {number}
+   * @memberof User
+   */
   private _exp: number;
   public get exp(): number {
     return this._exp;
