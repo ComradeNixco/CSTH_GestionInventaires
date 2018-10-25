@@ -1,4 +1,4 @@
-import { AppConfig, /*TK_APP_CONFIG*/ } from './app-config/app-config.module';
+import { AppConfig, TK_APP_CONFIG, /*TK_APP_CONFIG*/ } from './app-config/app-config.module';
 import { Injectable, Inject } from '@angular/core';
 import {
   HttpEvent, HttpInterceptor, HttpHandler, HttpRequest
@@ -17,7 +17,9 @@ import { Observable } from 'rxjs';
  */
 @Injectable()
 export class APIInterceptor implements HttpInterceptor {
-  constructor(/*@Inject(TK_APP_CONFIG)*/ private appSettings: AppConfig) {
+  constructor(
+    @Inject(TK_APP_CONFIG) private appSettings: AppConfig
+  ) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

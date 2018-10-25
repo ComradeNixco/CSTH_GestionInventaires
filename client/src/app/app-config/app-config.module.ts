@@ -3,7 +3,7 @@ import { NgModule, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
-// export const TK_APP_CONFIG = new InjectionToken<AppConfig>('app.config');
+export const TK_APP_CONFIG = new InjectionToken<AppConfig>('app.config');
 
 export class AppConfig {
   apiBaseUrl: string;
@@ -15,7 +15,7 @@ const APP_CONFIG: AppConfig = {
 
 @NgModule({
   providers: [{
-    provide: AppConfig,
+    provide: TK_APP_CONFIG,
     useValue: APP_CONFIG
   }]
 })
