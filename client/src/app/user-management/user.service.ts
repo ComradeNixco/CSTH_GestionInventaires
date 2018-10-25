@@ -1,3 +1,4 @@
+import { User } from './models/user';
 import { UserManagementModule } from './user-management.module';
 import { Injectable } from '@angular/core';
 import { HttpClient } from 'selenium-webdriver/http';
@@ -18,7 +19,7 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router?: Router
   ) { }
 
   /**
@@ -58,5 +59,23 @@ export class UserService {
     localStorage.removeItem('api.user.token');
 
     this.router.navigateByUrl('/');
+  }
+
+  /**
+   * Returns the `User` currently logged in or null if none
+   *
+   * @returns {User} THe currently logged in `User`
+   * @memberof UserService
+   */
+  public getCurrentUser(): User {
+    const token = this.getToken();
+    let payload: string;
+    if (token) {
+      payload = token.split('.')[1];
+      payload = window.atob(payload);
+      return JSON.parse(payload);
+    } else {
+      return null;
+    }
   }
 }
