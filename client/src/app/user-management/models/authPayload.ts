@@ -5,6 +5,6 @@
  * @interface AuthPayload
  */
 export default interface AuthPayload {
-  email: string;
+  username: string;
   passwd: string;
 }

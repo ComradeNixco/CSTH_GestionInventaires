@@ -25,7 +25,7 @@ export class APIInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req && req.url.startsWith('api://')) {
       req = req.clone({
-        url: `${this.appSettings.apiBaseUrl}/${req.url.substr(6)}`
+        url: `${this.appSettings.apiBaseUrl}${req.url.substr(6)}`
       });
     }
     return next.handle(req);

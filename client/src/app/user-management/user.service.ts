@@ -1,6 +1,5 @@
 import AuthPayload from './models/authPayload';
 import { User, TokenResponse } from './models/user';
-import { UserManagementModule } from './user-management.module';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,9 +8,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: UserManagementModule
-})
+@Injectable()
 export class UserService {
   /**
    * JWT token of the current user (if any)

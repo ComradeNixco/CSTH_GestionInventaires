@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { UserService } from './user.service';
 
 @NgModule({
   imports: [
@@ -13,6 +14,9 @@ import { RegisterComponent } from './components/register/register.component';
     MaterialImportModule
   ],
   exports: [ LoginComponent, RegisterComponent ],
-  declarations: [ LoginComponent, RegisterComponent ]
+  declarations: [ LoginComponent, RegisterComponent ],
+  providers: [
+    UserService
+  ]
 })
 export class UserManagementModule { }
