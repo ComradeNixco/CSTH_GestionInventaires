@@ -1,0 +1,19 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Erreur 404</mat-card-title>
+        <mat-card-subtitle>Page introuvable</mat-card-subtitle>
+    </mat-card-header>
+    <img matCardImage src="/assets/Error404.png">
+    <mat-card-content>
+        <p>La route demandé "{{routeUrl}}" n'existe pas!</p>
+        <mat-divider [inset]="true"></mat-divider>
+        <p>
+          Si vous croyez que cette erreur ne devrait pas arrivé,
+          s'il-vous-plait contacté un administrateur du club info ou
+          <a href="mailto:nixcocpp@gmail.com">Nicolas Lapointe</a>, créateur de l'application
+        </p>
+    </mat-card-content>
+    <mat-card-actions>
+        <a mat-raised-button class="card-btn" color="warn" router-link="/">Retourner à la page principale</a>
+    </mat-card-actions>
+</mat-card>
