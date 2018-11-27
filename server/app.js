@@ -6,7 +6,8 @@ let cookieParser = require('cookie-parser'),
     debug = require('debug')('app:startup'),
     express = require('express'),
     path = require('path'),
-    passport = require('passport');
+    passport = require('passport'),
+    cors = require('cors');
 /* eslint-enable indent */
 
 debug('starting server...');
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(passport.initialize());
+app.use(cors());
 
 // Routers
 app.use('/', require('./routes/index'));

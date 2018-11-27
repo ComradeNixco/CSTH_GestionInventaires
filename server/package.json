@@ -11,6 +11,7 @@
     "atob": "^2.1.2",
     "bcrypt": "^3.0.1",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv-safe": "^6.0.0",
     "express": "~4.16.0",
