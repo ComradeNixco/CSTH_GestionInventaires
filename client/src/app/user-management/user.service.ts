@@ -1,11 +1,14 @@
+
 import AuthPayload from './models/authPayload';
 import { User, TokenResponse } from './models/user';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { Observable } from 'rxjs';
+import {
+  throwError as observableThrowError,
+  Observable
+} from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable()
@@ -151,7 +154,7 @@ export class UserService {
         base = this.http.post(URL, authPayload, ops);
         break;
       default:
-        return Observable.throw('Invalid http method used for API call');
+        return observableThrowError('Invalid http method used for API call');
     }
 
     // 3. return the needed `Observable`\
