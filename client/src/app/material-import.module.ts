@@ -4,7 +4,12 @@ import {
   MatButtonModule,
   MatToolbarModule,
   MatCardModule,
-  MatDividerModule
+  MatDividerModule,
+  MatSnackBarModule,
+  MAT_LABEL_GLOBAL_OPTIONS,
+  MatFormFieldModule,
+  MatInputModule,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS
 } from '@angular/material';
 
 @NgModule({
@@ -13,13 +18,23 @@ import {
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSnackBarModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   exports: [
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSnackBarModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
+  providers: [
+    { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'auto' } },
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
   ]
 })
 export class MaterialImportModule { }
