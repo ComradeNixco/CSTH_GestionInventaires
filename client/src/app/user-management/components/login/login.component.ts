@@ -18,6 +18,8 @@ export class LoginComponent implements OnInit {
 
   message = '';
 
+  private _isLoggingIn = false;
+
   constructor(
     private userSvc: UserService,
     public snackBar: MatSnackBar
@@ -27,10 +29,12 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this._isLoggingIn = true;
     this.userSvc.login({
       username: this.username.value,
       passwd: this.passwd.value
     }).subscribe(res => {
+      this._isLoggingIn = false;
       const snack = this.snackBar.open(
         'Connection réussi! Redirection dans un instant...',
         null,
@@ -39,6 +43,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }, err => {
+      this._isLoggingIn = false;
       const snack = this.snackBar.open(
         'Impossible de se connecter',
         null, {
@@ -49,7 +54,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  public get loginBtnColor() : string {
+  public get loginBtnColor(): string {
     if (this.username.valid && this.passwd.valid) {
       return 'primary';
     }
@@ -57,4 +62,7 @@ export class LoginComponent implements OnInit {
     return 'disabled';
   }
 
+  public get isLoggingIn(): boolean {
+    return this._isLoggingIn;
+  }
 }

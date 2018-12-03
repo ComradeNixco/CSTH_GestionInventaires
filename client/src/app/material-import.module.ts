@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  MAT_LABEL_GLOBAL_OPTIONS,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatButtonModule,
   MatToolbarModule,
   MatCardModule,
   MatDividerModule,
   MatSnackBarModule,
-  MAT_LABEL_GLOBAL_OPTIONS,
   MatFormFieldModule,
   MatInputModule,
-  MAT_SNACK_BAR_DEFAULT_OPTIONS
+  MatProgressBarModule
 } from '@angular/material';
 
 @NgModule({
@@ -21,7 +22,8 @@ import {
     MatDividerModule,
     MatSnackBarModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatProgressBarModule
   ],
   exports: [
     MatButtonModule,
@@ -30,7 +32,8 @@ import {
     MatDividerModule,
     MatSnackBarModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatProgressBarModule
   ],
   providers: [
     { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'auto' } },

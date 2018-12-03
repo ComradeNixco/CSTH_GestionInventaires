@@ -11,6 +11,12 @@
       <mat-label>Mot de passe</mat-label>
       <input matInput required type="password" [formControl]="passwd">
     </mat-form-field>
+
+    <!-- Progress bar only when logging in -->
+    <div *ngIf="isLoggingIn">
+      <mat-label>Connection en cours</mat-label>
+      <mat-progress-bar mode="query"></mat-progress-bar>
+    </div>
   </mat-card-content>
   <mat-card-actions align="center">
     <button
