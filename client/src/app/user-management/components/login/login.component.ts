@@ -1,5 +1,7 @@
 import { UserService } from './../../user.service';
+
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
@@ -8,8 +10,12 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  username = 'test';
-  passwd = 'Password01$';
+  username = new FormControl('', Validators.required);
+  passwd = new FormControl('', [
+    Validators.required,
+    Validators.minLength(6)
+  ]);
+
   message = '';
 
   constructor(
@@ -22,18 +28,18 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.userSvc.login({
-      username: this.username,
-      passwd: this.passwd
+      username: this.username.value,
+      passwd: this.passwd.value
     }).subscribe(res => {
-      let snack = this.snackBar.open(
-        'OwO',
+      const snack = this.snackBar.open(
+        'Connection réussi! Redirection dans un instant...',
         null,
         {
           panelClass: 'snackbar-accent'
         }
       );
     }, err => {
-      let snack = this.snackBar.open(
+      const snack = this.snackBar.open(
         'Impossible de se connecter',
         null, {
           panelClass: 'snackbar-warn'
@@ -41,4 +47,14 @@ export class LoginComponent implements OnInit {
       );
     });
   }
+
+
+  public get loginBtnColor() : string {
+    if (this.username.valid && this.passwd.valid) {
+      return 'primary';
+    }
+
+    return 'disabled';
+  }
+
 }

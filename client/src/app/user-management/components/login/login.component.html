@@ -3,14 +3,20 @@
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div>
-      <mat-form-field class="full-width">
-        <mat-label>Pseudo</mat-label>
-        <input matInput required>
-      </mat-form-field>
-    </div>
+    <mat-form-field class="full-width">
+      <mat-label>Pseudo</mat-label>
+      <input matInput required [formControl]="username">
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <mat-label>Mot de passe</mat-label>
+      <input matInput required type="password" [formControl]="passwd">
+    </mat-form-field>
   </mat-card-content>
   <mat-card-actions align="center">
-    <button mat-raised-button color="primary" (click)="login()">Login</button>
+    <button
+      mat-raised-button
+      color="{{loginBtnColor}}"
+      [disabled]="!username.valid || !passwd.valid"
+      (click)="login()">Login</button>
   </mat-card-actions>
 </mat-card>
