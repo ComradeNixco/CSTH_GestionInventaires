@@ -10,13 +10,15 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MaterialImportModule } from './material-import.module';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { UserManagementModule } from './user-management/user-management.module';
+import { TaskPipe } from './pipes/task.pipe';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    TaskPipe
   ],
   imports: [
     BrowserModule,
