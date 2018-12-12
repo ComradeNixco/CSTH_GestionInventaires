@@ -3,7 +3,11 @@
 @import 'src/_variables.scss';
 
 html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; }
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-display: block;
+}
 
 .snackbar-accent {
   background: $accent !important;

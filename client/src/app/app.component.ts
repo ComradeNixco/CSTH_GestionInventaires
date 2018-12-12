@@ -1,3 +1,4 @@
+import { TasksService } from './tasks.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'client';
+  constructor(public taskSvc: TasksService) {}
+
+  public get getTbColor(): string {
+    if (this.taskSvc.atLeastOneActive()) {
+      return 'warn';
+    }
+    return 'primary';
+  }
 }

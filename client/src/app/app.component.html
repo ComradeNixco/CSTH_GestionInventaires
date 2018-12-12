@@ -1,9 +1,14 @@
-<mat-toolbar color="primary">
+<mat-toolbar [color]="getTbColor">
   <mat-toolbar-row>
     <span><a href="/">HOME</a></span>
     <span class="spacer"></span>
+    <div *ngIf="taskSvc.atLeastOneActive()">
+      <span>{{taskSvc.latestTask | task}}</span>
+      <span class="spacer"></span>
+    </div>
     <a mat-stroked-button routerLink="/register">Register</a>
     <a mat-stroked-button routerLink="/login">Login</a>
   </mat-toolbar-row>
 </mat-toolbar>
+<mat-progress-bar *ngIf="taskSvc.atLeastOneActive()" mode="query"></mat-progress-bar>
 <router-outlet></router-outlet>
