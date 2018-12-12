@@ -1,28 +1,31 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Login</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-form-field class="full-width">
-      <mat-label>Pseudo</mat-label>
-      <input matInput required [formControl]="username">
-    </mat-form-field>
-    <mat-form-field class="full-width">
-      <mat-label>Mot de passe</mat-label>
-      <input matInput required type="password" [formControl]="passwd">
-    </mat-form-field>
+<form>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field class="full-width">
+        <mat-label>Pseudo</mat-label>
+        <input matInput required [formControl]="username">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput required type="password" [formControl]="passwd">
+      </mat-form-field>
 
-    <!-- Progress bar only when logging in -->
-    <div *ngIf="isLoggingIn">
-      <mat-label>Connection en cours</mat-label>
-      <mat-progress-bar mode="query"></mat-progress-bar>
-    </div>
-  </mat-card-content>
-  <mat-card-actions align="center">
-    <button
-      mat-raised-button
-      color="{{loginBtnColor}}"
-      [disabled]="!username.valid || !passwd.valid"
-      (click)="login()">Login</button>
-  </mat-card-actions>
-</mat-card>
+      <!-- Progress bar only when logging in -->
+      <div *ngIf="isLoggingIn">
+        <mat-label>Connection en cours</mat-label>
+        <mat-progress-bar mode="query"></mat-progress-bar>
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="center">
+      <button
+        mat-raised-button
+        color="{{loginBtnColor}}"
+        type="submit"
+        [disabled]="!username.valid || !passwd.valid"
+        (click)="login()">Login</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
