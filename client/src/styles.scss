@@ -9,6 +9,10 @@ body {
   font-display: block;
 }
 
+*[class^='snackbar-'], *[class *= 'snackbar-'] {
+  white-space: pre-wrap;
+}
+
 .snackbar-accent {
   background: $accent !important;
   color: $dark-primary-text;

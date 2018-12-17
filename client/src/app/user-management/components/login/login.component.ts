@@ -39,12 +39,14 @@ export class LoginComponent {
       );
     }, err => {
     this._isLoggingIn = false;
-    const snack = this.snackBar.open(
-        'Impossible de se connecter',
-        null, {
-          panelClass: 'snackbar-warn'
-        }
-      );
+      if (err.status === 401) {
+        this.snackBar.open(
+          'Erreur lors de la tentative de connection:\nPseudo ou mot de passe invalide',
+          null, {
+            panelClass: 'snackbar-warn'
+          }
+        );
+      }
     });
   }
 
@@ -59,5 +61,14 @@ export class LoginComponent {
 
   public get isLoggingIn(): boolean {
     return this._isLoggingIn;
+  }
+
+  public get pwErrorMessage(): string {
+    if (this.passwd.hasError('minlength')) {
+      return 'Mot de Passe trop court';
+    } else if (this.passwd.hasError('required')) {
+      return 'Le mot de passe est requis';
+    }
+    return null;
   }
 }

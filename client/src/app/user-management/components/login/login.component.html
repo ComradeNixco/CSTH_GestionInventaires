@@ -10,7 +10,8 @@
       </mat-form-field>
       <mat-form-field class="full-width">
         <mat-label>Mot de passe</mat-label>
-        <input matInput required type="password" [formControl]="passwd">
+        <input matInput type="password" [formControl]="passwd">
+        <mat-error *ngIf="passwd.invalid">{{pwErrorMessage}}</mat-error>
       </mat-form-field>
 
       <!-- Progress bar only when logging in -->
