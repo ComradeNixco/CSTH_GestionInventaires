@@ -1,23 +1,21 @@
 import { UserService } from './../../user.service';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   username = new FormControl('', Validators.required);
   passwd = new FormControl('', [
     Validators.required,
     Validators.minLength(6)
   ]);
-
-  message = '';
-
   private _isLoggingIn = false;
 
   constructor(
@@ -25,17 +23,14 @@ export class LoginComponent implements OnInit {
     public snackBar: MatSnackBar
     ) {}
 
-  ngOnInit() {
-  }
-
   login() {
     this._isLoggingIn = true;
     this.userSvc.login({
       username: this.username.value,
       passwd: this.passwd.value
     }).subscribe(res => {
-      this._isLoggingIn = false;
-      const snack = this.snackBar.open(
+    this._isLoggingIn = false;
+    const snack = this.snackBar.open(
         'Connection réussi! Redirection dans un instant...',
         null,
         {
@@ -43,8 +38,8 @@ export class LoginComponent implements OnInit {
         }
       );
     }, err => {
-      this._isLoggingIn = false;
-      const snack = this.snackBar.open(
+    this._isLoggingIn = false;
+    const snack = this.snackBar.open(
         'Impossible de se connecter',
         null, {
           panelClass: 'snackbar-warn'

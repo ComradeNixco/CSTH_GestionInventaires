@@ -6,7 +6,7 @@ export class Task {
   private hasEnded = false;
 
   public get IsActive(): boolean {
-    return this.hasEnded;
+    return !this.hasEnded;
   }
 
   public constructor(public name) {

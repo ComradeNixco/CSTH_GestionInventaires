@@ -1,18 +1,20 @@
-import { TasksService } from './tasks.service';
-import { Component } from '@angular/core';
+import { UserService } from './user-management/user.service';
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  constructor(public taskSvc: TasksService) {}
+export class AppComponent implements OnInit, OnDestroy {
 
-  public get getTbColor(): string {
-    if (this.taskSvc.atLeastOneActive()) {
-      return 'warn';
-    }
-    return 'primary';
-  }
+  constructor(public users: UserService) {}
+
+  ngOnInit(): void {}
+  ngOnDestroy(): void {}
 }
