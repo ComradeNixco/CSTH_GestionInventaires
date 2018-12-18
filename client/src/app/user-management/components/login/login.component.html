@@ -7,6 +7,7 @@
       <mat-form-field class="full-width">
         <mat-label>Pseudo</mat-label>
         <input matInput required [formControl]="username">
+        <mat-error *ngIf="username.invalid">{{unErrorMessage}}</mat-error>
       </mat-form-field>
       <mat-form-field class="full-width">
         <mat-label>Mot de passe</mat-label>
@@ -16,8 +17,8 @@
 
       <!-- Progress bar only when logging in -->
       <div *ngIf="isLoggingIn">
-        <mat-label>Connection en cours</mat-label>
-        <mat-progress-bar mode="query"></mat-progress-bar>
+        <mat-label class="connection-label">Connection en cours</mat-label>
+        <mat-progress-bar color="accent" mode="query"></mat-progress-bar>
       </div>
     </mat-card-content>
     <mat-card-actions align="center">
@@ -26,7 +27,8 @@
         color="{{loginBtnColor}}"
         type="submit"
         [disabled]="!username.valid || !passwd.valid"
-        (click)="login()">Login</button>
+        (click)="login()">Login
+      </button>
     </mat-card-actions>
   </mat-card>
 </form>

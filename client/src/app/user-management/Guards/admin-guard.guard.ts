@@ -24,6 +24,8 @@ export class AdminGuard implements CanActivate {
       return true;
     }
 
+    // TODO: change url to go to a warning page letting user know it's an admin only route
+    // TODO: and confirming him to login as an admin
     this.router.navigate([ '/login' ], { queryParams: { returnUrl: state.url } });
     return false;
   }

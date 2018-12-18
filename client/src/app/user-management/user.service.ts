@@ -35,8 +35,6 @@ export class UserService {
   public logout(): void {
     this.token = '';
     localStorage.removeItem('api.user.token');
-
-    this.router.navigateByUrl('/');
   }
 
   /**

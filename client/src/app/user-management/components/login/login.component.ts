@@ -3,6 +3,7 @@ import { UserService } from './../../user.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { MatSnackBar } from '@angular/material';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   username = new FormControl('', Validators.required);
   passwd = new FormControl('', [
     Validators.required,
@@ -20,8 +21,15 @@ export class LoginComponent {
 
   constructor(
     private userSvc: UserService,
-    public snackBar: MatSnackBar
+    private route: ActivatedRoute,
+    private router: Router,
+    public snackBar: MatSnackBar,
     ) {}
+
+  ngOnInit(): void {
+    // When trying to login (aka displaying the login component), logout current user
+    this.userSvc.logout();
+  }
 
   login() {
     this._isLoggingIn = true;
@@ -29,14 +37,20 @@ export class LoginComponent {
       username: this.username.value,
       passwd: this.passwd.value
     }).subscribe(res => {
-    this._isLoggingIn = false;
-    const snack = this.snackBar.open(
+      this._isLoggingIn = false;
+      const snack = this.snackBar.open(
         'Connection réussi! Redirection dans un instant...',
         null,
         {
           panelClass: 'snackbar-accent'
         }
       );
+      let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+      if (returnUrl === null) {
+        returnUrl = '/';
+      }
+
+      this.router.navigateByUrl(returnUrl);
     }, err => {
     this._isLoggingIn = false;
       if (err.status === 401) {
@@ -46,10 +60,16 @@ export class LoginComponent {
             panelClass: 'snackbar-warn'
           }
         );
+      } else {
+        this.snackBar.open(
+          'Une erreur est survenue lors de la tentative de connection',
+          null, {
+            panelClass: 'snackbar-warn'
+          }
+        );
       }
     });
   }
-
 
   public get loginBtnColor(): string {
     if (this.username.valid && this.passwd.valid) {
@@ -68,6 +88,13 @@ export class LoginComponent {
       return 'Mot de Passe trop court';
     } else if (this.passwd.hasError('required')) {
       return 'Le mot de passe est requis';
+    }
+    return null;
+  }
+
+  public get unErrorMessage(): string {
+    if (this.username.hasError('required')) {
+      return 'Le pseudo est requis';
     }
     return null;
   }
