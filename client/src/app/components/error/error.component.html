@@ -1,0 +1,12 @@
+<mat-card color="warn">
+  <mat-card-header>
+    <mat-card-title>Erreur!</mat-card-title>
+  </mat-card-header>
+  <mat-card-content [ngSwitch]="errId">
+    <span *ngSwitchCase="'NeedsAdmin'">Vous n'avez pas la permission d'accèder à cette page: Vous devez être un administrateur</span>
+    <span *ngSwitchDefault>
+      Une erreur inconnue est survenue!<br>
+      Svp contacter un administrateur du club info ou <a href="mailto:nixcocpp@gmail.com">Nicolas Lapointe</a>, développeur de l'application
+    </span>
+  </mat-card-content>
+</mat-card>
