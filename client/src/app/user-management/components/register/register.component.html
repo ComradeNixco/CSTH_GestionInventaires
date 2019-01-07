@@ -1,3 +1,35 @@
-<p>
-  register works!
-</p>
+<form>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Enregistrement</mat-card-title>
+      <mat-card-subtitle>Ajout d'un club au système</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field class="full-width">
+        <mat-label>Pseudo</mat-label>
+        <input matInput required [formControl]="username">
+        <mat-error *ngIf="username.invalid">{{unErrorMessage}}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput type="password" [formControl]="passwd">
+        <mat-error *ngIf="passwd.invalid">{{pwErrorMessage}}</mat-error>
+      </mat-form-field>
+
+      <!-- Progress bar only when logging in -->
+      <div *ngIf="isLoggingIn">
+        <mat-label class="connection-label">Connection en cours</mat-label>
+        <mat-progress-bar color="accent" mode="query"></mat-progress-bar>
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="center">
+      <button
+        mat-raised-button
+        color="{{loginBtnColor}}"
+        type="submit"
+        [disabled]="!username.valid || !passwd.valid"
+        (click)="register()">Ok
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -13,6 +13,8 @@ import {
   MatProgressBarModule
 } from '@angular/material';
 
+import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import {
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatPasswordStrengthModule
   ],
   exports: [
     MatButtonModule,
@@ -33,7 +36,8 @@ import {
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatPasswordStrengthModule
   ],
   providers: [
     { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'auto' } },

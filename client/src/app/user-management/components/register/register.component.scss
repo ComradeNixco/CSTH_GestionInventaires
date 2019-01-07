@@ -1,0 +1,14 @@
+@import "src/variables";
+
+mat-card {
+  margin: auto;
+  max-width: 600px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.connection-label {
+  color: lighten($color: $accent, $amount: 35%)
+}

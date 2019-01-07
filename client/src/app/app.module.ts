@@ -1,3 +1,4 @@
+import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { AppConfigModule } from './app-config/app-config.module';
 import { APIInterceptor } from './APIInterceptor';
 import { BrowserModule } from '@angular/platform-browser';
@@ -26,7 +27,8 @@ import { ErrorComponent } from './components/error/error.component';
     AppRoutingModule,
     AppConfigModule,
     MaterialImportModule,
-    UserManagementModule
+    UserManagementModule,
+    MatPasswordStrengthModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: APIInterceptor, multi: true }
