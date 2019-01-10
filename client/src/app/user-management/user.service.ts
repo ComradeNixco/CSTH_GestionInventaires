@@ -7,20 +7,15 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   throwError as observableThrowError,
-  Observable
+  Observable,
+  BehaviorSubject
 } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
-  /**
-   * JWT token of the current user (if any)
-   *
-   * @private
-   * @type {string}
-   * @memberof UserService
-   */
-  private token: string;
+  private token$: BehaviorSubject<string>;
+  private readonly TOKEN_STORAGE_KEY = 'api.user.token';
 
   constructor(
     private http: HttpClient,
@@ -34,25 +29,18 @@ export class UserService {
    */
   public logout(): void {
     this.token = '';
-    localStorage.removeItem('api.user.token');
   }
 
   /**
    * Returns the `User` currently logged in or null if none
    *
-   * @returns {User} THe currently logged in `User`
+   * @returns {User} The currently logged in `User`
    * @memberof UserService
    */
-  public getCurrentUser(): User {
-    const token = this.getToken();
-    let payload: string;
-    if (token) {
-      payload = token.split('.')[1];
-      payload = window.atob(payload);
-      return JSON.parse(payload);
-    } else {
-      return null;
-    }
+  public getCurrentUser(): Observable<User> {
+    return this.token$.pipe(
+      map(s => this.getUserFromToken(s))
+    );
   }
 
   /**
@@ -60,10 +48,10 @@ export class UserService {
    *
    * @returns Vrai si un User est connecté, faux sinon ou si son token a expiré
    */
-  public isLoggedIn(): boolean {
-    const user = this.getCurrentUser();
-
-    return user && user.exp > Date.now() / 1000;
+  public isLoggedIn(): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      map(u => u && u.exp > Date.now() / 1000)
+    );
   }
 
   // API Calls
@@ -91,7 +79,7 @@ export class UserService {
   private toggleProperty(user: User, property: string): Observable<any> {
     return this.apiRequest(`${user.username}/${property}`, 'post', true).pipe(
       tap(_ => {
-        const currentUser = this.getCurrentUser();
+        const currentUser = this.getUserFromToken(this.token);
         if (currentUser && currentUser.username === user.username) {
           this.logout();
         }
@@ -100,30 +88,29 @@ export class UserService {
   }
 
   /**
-   * saves the token into localStorage
-   *
-   * @private
-   * @param {string} token The token to save
-   * @memberof UserService
+   * The current user's token
    */
-  private saveToken(token: string): void {
-    localStorage.setItem('api.user.token', token);
-    this.token = token;
+  private get token(): string {
+    return this.token$.getValue();
+  }
+  private set token(token: string) {
+    if (token === '') {
+      localStorage.removeItem(this.TOKEN_STORAGE_KEY);
+    } else {
+      localStorage.setItem(this.TOKEN_STORAGE_KEY, token);
+    }
+    this.token$.next(token);
   }
 
-  /**
-   * Gets the current user's token from memory or from localStorage
-   *
-   * @private
-   * @returns {string} The JWT token associated with the durrent user
-   * @memberof UserService
-   */
-  private getToken(): string {
-    if (!this.token) {
-      this.token = localStorage.getItem('api.user.token');
+  private getUserFromToken(token: string): User {
+    let payload: string;
+    if (token) {
+      payload = token.split('.')[1];
+      payload = window.atob(payload);
+      return JSON.parse(payload);
+    } else {
+      return null;
     }
-
-    return this.token;
   }
 
   private apiRequest(
@@ -139,7 +126,7 @@ export class UserService {
     // 1. Prepare options object (empty if not needed)
     if (authenticatedLogin) {
       ops = {
-        headers: new HttpHeaders({ Authorization: `Bearer ${this.getToken()}` })
+        headers: new HttpHeaders({ Authorization: `Bearer ${this.token}` })
       };
     }
 
@@ -157,12 +144,10 @@ export class UserService {
 
     // 3. return the needed `Observable`\
     return base.pipe(
-      map((data: TokenResponse) => {
+      tap((data: TokenResponse) => {
         if (data.token) {
-          this.saveToken(data.token);
+          this.token = data.token;
         }
-
-        return data;
       })
     );
   }
