@@ -39,6 +39,13 @@ export class User {
     this._isAdmin = v;
   }
 
+  public get isConnected(): boolean {
+    const RET = this.isActive          // To be considered connected, one has to be active
+      && this.exp                      // If not connected, exp doesn't get set
+      && this.exp > Date.now() / 1000; // Is the token expired?
+    return RET;
+  }
+
   /**
    * Expiration date of the token linked with this user, if this instance is the current user (logged-in by the API)
    *

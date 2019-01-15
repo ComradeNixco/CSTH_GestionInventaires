@@ -27,8 +27,6 @@ export class RegisterComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    // When trying to login (aka displaying the login component), logout current user
-    this.userSvc.logout();
   }
 
   register() {

@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
     this._isLoggingIn = false;
       if (err.status === 401) {
         this.snackBar.open(
-          'Erreur lors de la tentative de connection:\n<b>Pseudo ou mot de passe invalide</b>',
+          'Erreur lors de la tentative de connection:\nPseudo ou mot de passe invalide',
           null, {
             panelClass: 'snackbar-warn'
           }

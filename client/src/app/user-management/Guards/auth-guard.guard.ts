@@ -20,8 +20,9 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    const curUser = this.userSvc.getCurrentUser();
-    if (curUser && curUser.isActive) {
+    // TODO: Change this, it doesn't take in account the token expiracy
+    const curUser = this.userSvc.currentUser;
+    if (curUser && curUser.isConnected) {
       return true;
     }
 

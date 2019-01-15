@@ -3,7 +3,7 @@ import AuthPayload from './models/authPayload';
 import { User, TokenResponse } from './models/user';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   throwError as observableThrowError,
@@ -20,7 +20,9 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private router?: Router
-  ) {}
+  ) {
+    this.token$ = new BehaviorSubject<string>(localStorage.getItem(this.TOKEN_STORAGE_KEY));
+  }
 
   /**
    * Logs out the current user by erasing from memory and from it's token before 'returning' to the root route
@@ -43,6 +45,10 @@ export class UserService {
     );
   }
 
+  public get currentUser(): User {
+    return this.getUserFromToken(this.token);
+  }
+
   /**
    * Déternmine si il y a actuellement un User de connecté au nvieau de l'application
    *
@@ -50,7 +56,7 @@ export class UserService {
    */
   public isLoggedIn(): Observable<boolean> {
     return this.getCurrentUser().pipe(
-      map(u => u && u.exp > Date.now() / 1000)
+      map(u => u && u.isConnected)
     );
   }
 
@@ -94,7 +100,7 @@ export class UserService {
     return this.token$.getValue();
   }
   private set token(token: string) {
-    if (token === '') {
+    if (token == null) {
       localStorage.removeItem(this.TOKEN_STORAGE_KEY);
     } else {
       localStorage.setItem(this.TOKEN_STORAGE_KEY, token);
