@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import {
   MAT_LABEL_GLOBAL_OPTIONS,
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
@@ -13,8 +14,10 @@ import {
   MatProgressBarModule,
   MatMenuModule,
   MatIconModule,
-  MatSidenavModule
+  MatSidenavModule,
+  MatListModule
 } from '@angular/material';
+
 
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 
@@ -32,7 +35,9 @@ import { MatPasswordStrengthModule } from '@angular-material-extensions/password
     MatPasswordStrengthModule,
     MatMenuModule,
     MatIconModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatListModule,
+    FlexLayoutModule
   ],
   exports: [
     MatButtonModule,
@@ -46,7 +51,9 @@ import { MatPasswordStrengthModule } from '@angular-material-extensions/password
     MatPasswordStrengthModule,
     MatMenuModule,
     MatIconModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatListModule,
+    FlexLayoutModule
   ],
   providers: [
     { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'auto' } },

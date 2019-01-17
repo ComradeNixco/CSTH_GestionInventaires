@@ -1,15 +1,28 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row *ngIf="!userSvc.isLoggedIn()">
-    <span class="spacer"></span>
-    <a mat-stroked-button routerLink="/register">Register</a>
-    <a mat-stroked-button routerLink="/login">Login</a>
-  </mat-toolbar-row>
-  <mat-toolbar-row *ngIf="userSvc.isLoggedIn()">
-    <button mat-icon-button><mat-icon>menu</mat-icon></button>
-    <span class="spacer"></span>
-    {{userSvc.currentUser.username}}
-    <span class="spacer"></span>
-    <!-- Use a sidenav for the menu (see responsive example) -->
-  </mat-toolbar-row>
-</mat-toolbar>
-<router-outlet></router-outlet>
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row *ngIf="!userSvc.isLoggedIn()">
+      <span class="spacer"></span>
+      <a mat-stroked-button routerLink="/register">Register</a>
+      <a mat-stroked-button routerLink="/login">Login</a>
+    </mat-toolbar-row>
+    <mat-toolbar-row *ngIf="userSvc.isLoggedIn()">
+      <button mat-icon-button (click)="sideMenu.toggle()"><mat-icon>menu</mat-icon></button>
+      <span class="spacer"></span>
+      {{userSvc.currentUser.username}}
+      <span class="spacer"></span>
+      <!-- Use a sidenav for the menu (see responsive example) -->
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-sidenav-container>
+    <mat-sidenav #sideMenu mode="over">
+      <mat-nav-list>
+        <a mat-list-item>Some item</a>
+        <mat-divider></mat-divider>
+        <a mat-list-item (click)="userSvc.logout()">Se déconnecter</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
