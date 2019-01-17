@@ -25,12 +25,10 @@ export class AdminGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     const curUser = this.userSvc.currentUser;
-    if (curUser && curUser.isConnected && curUser.isAdmin) {
+    if (this.userSvc.isLoggedIn() && curUser.isAdmin) {
       return true;
     }
 
-    // TODO: change url to go to a warning page letting user know it's an admin only route
-    // TODO: and confirming him to login as an admin
     this.router.navigate([ '/error/NeedsAdmin' ]);
     return false;
   }

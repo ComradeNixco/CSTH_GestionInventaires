@@ -1,9 +1,8 @@
 import { UserService } from './user-management/user.service';
+import { User } from './user-management/models/user';
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,9 +11,11 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  constructor(public userSvc: UserService) {}
 
-  constructor(public users: UserService) {}
+  ngOnInit(): void {
+  }
 
-  ngOnInit(): void {}
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+  }
 }

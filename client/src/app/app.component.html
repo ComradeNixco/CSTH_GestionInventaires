@@ -1,9 +1,15 @@
 <mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span><a href="/">[[PLACEHOLDER]]</a></span>
+  <mat-toolbar-row *ngIf="!userSvc.isLoggedIn()">
     <span class="spacer"></span>
     <a mat-stroked-button routerLink="/register">Register</a>
     <a mat-stroked-button routerLink="/login">Login</a>
+  </mat-toolbar-row>
+  <mat-toolbar-row *ngIf="userSvc.isLoggedIn()">
+    <button mat-icon-button><mat-icon>menu</mat-icon></button>
+    <span class="spacer"></span>
+    {{userSvc.currentUser.username}}
+    <span class="spacer"></span>
+    <!-- Use a sidenav for the menu (see responsive example) -->
   </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>

@@ -15,7 +15,6 @@ import { ErrorComponent } from './components/error/error.component';
 import { MainComponent } from './components/main/main.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,

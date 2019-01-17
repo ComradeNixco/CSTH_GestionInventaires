@@ -1,8 +1,14 @@
 import { UserService } from './../user.service';
 import { UserManagementModule } from './../user-management.module';
+import { User } from './../models/user';
 
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router
+} from '@angular/router';
 
 import { Observable } from 'rxjs';
 
@@ -20,9 +26,7 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    // TODO: Change this, it doesn't take in account the token expiracy
-    const curUser = this.userSvc.currentUser;
-    if (curUser && curUser.isConnected) {
+    if (this.userSvc.isLoggedIn()) {
       return true;
     }
 

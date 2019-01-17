@@ -10,7 +10,10 @@ import {
   MatSnackBarModule,
   MatFormFieldModule,
   MatInputModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatMenuModule,
+  MatIconModule,
+  MatSidenavModule
 } from '@angular/material';
 
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
@@ -26,7 +29,10 @@ import { MatPasswordStrengthModule } from '@angular-material-extensions/password
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
-    MatPasswordStrengthModule
+    MatPasswordStrengthModule,
+    MatMenuModule,
+    MatIconModule,
+    MatSidenavModule
   ],
   exports: [
     MatButtonModule,
@@ -37,7 +43,10 @@ import { MatPasswordStrengthModule } from '@angular-material-extensions/password
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
-    MatPasswordStrengthModule
+    MatPasswordStrengthModule,
+    MatMenuModule,
+    MatIconModule,
+    MatSidenavModule
   ],
   providers: [
     { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'auto' } },

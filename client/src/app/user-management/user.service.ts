@@ -3,7 +3,7 @@ import AuthPayload from './models/authPayload';
 import { User, TokenResponse } from './models/user';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   throwError as observableThrowError,
@@ -14,14 +14,11 @@ import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
-  private token$: BehaviorSubject<string>;
+  private _token: string;
   private readonly TOKEN_STORAGE_KEY = 'api.user.token';
 
-  constructor(
-    private http: HttpClient,
-    private router?: Router
-  ) {
-    this.token$ = new BehaviorSubject<string>(localStorage.getItem(this.TOKEN_STORAGE_KEY));
+  constructor(private http: HttpClient) {
+    this._token = localStorage.getItem(this.TOKEN_STORAGE_KEY) || '';
   }
 
   /**
@@ -33,31 +30,21 @@ export class UserService {
     this.token = '';
   }
 
-  /**
-   * Returns the `User` currently logged in or null if none
-   *
-   * @returns {User} The currently logged in `User`
-   * @memberof UserService
-   */
-  public getCurrentUser(): Observable<User> {
-    return this.token$.pipe(
-      map(s => this.getUserFromToken(s))
-    );
-  }
-
   public get currentUser(): User {
     return this.getUserFromToken(this.token);
   }
 
   /**
-   * Déternmine si il y a actuellement un User de connecté au nvieau de l'application
+   * Détermine si il y a actuellement un User de connecté au nvieau de l'application
    *
    * @returns Vrai si un User est connecté, faux sinon ou si son token a expiré
    */
-  public isLoggedIn(): Observable<boolean> {
-    return this.getCurrentUser().pipe(
-      map(u => u && u.isConnected)
-    );
+  public isLoggedIn(): boolean {
+    const curUser = this.currentUser;
+    let ret = !!curUser;
+    ret = ret && curUser.isActive;
+    ret = ret && curUser.exp > Date.now() / 1000;
+    return ret;
   }
 
   // API Calls
@@ -97,23 +84,24 @@ export class UserService {
    * The current user's token
    */
   private get token(): string {
-    return this.token$.getValue();
+    return this._token;
   }
   private set token(token: string) {
-    if (token == null) {
+    token = token || '';
+    if (token === '') {
       localStorage.removeItem(this.TOKEN_STORAGE_KEY);
     } else {
       localStorage.setItem(this.TOKEN_STORAGE_KEY, token);
     }
-    this.token$.next(token);
+
+    this._token = token;
   }
 
   private getUserFromToken(token: string): User {
-    let payload: string;
     if (token) {
-      payload = token.split('.')[1];
+      let payload = token.split('.')[1];
       payload = window.atob(payload);
-      return JSON.parse(payload);
+      return JSON.parse(payload) as User;
     } else {
       return null;
     }
