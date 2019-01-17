@@ -29,7 +29,7 @@ export class AdminGuard implements CanActivate {
       return true;
     }
 
-    this.router.navigate([ '/error/NeedsAdmin' ]);
+    this.router.navigate([ '/error/NeedsAdmin' ], { queryParams: { returnUrl: state.url }});
     return false;
   }
 }

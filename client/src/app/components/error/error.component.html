@@ -3,7 +3,12 @@
     <mat-card-title>Erreur!</mat-card-title>
   </mat-card-header>
   <mat-card-content [ngSwitch]="errId">
-    <span *ngSwitchCase="'NeedsAdmin'">Vous n'avez pas la permission d'accèder à cette page: Vous devez être un administrateur</span>
+    <div *ngSwitchCase="'NeedsAdmin'">
+      <p>Vous n'avez pas la permission d'accèder à cette page: Vous devez être un administrateur</p>
+      <p><a mat-raised-button href="/login?returnUrl={{returnUrl}}" color="primary">
+        Se connecter (en tant qu'admin)
+      </a></p>
+    </div>
     <span *ngSwitchDefault>
       Une erreur inconnue est survenue!<br>
       Svp contacter un administrateur du club info ou <a href="mailto:nixcocpp@gmail.com">Nicolas Lapointe</a>, développeur de l'application
