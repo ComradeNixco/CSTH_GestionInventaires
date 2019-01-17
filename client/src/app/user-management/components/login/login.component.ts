@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   username = new FormControl('', Validators.required);
   passwd = new FormControl('', [
     Validators.required,
@@ -25,11 +25,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar,
     ) {}
-
-  ngOnInit(): void {
-    // When trying to login (aka displaying the login component), logout current user
-    this.userSvc.logout();
-  }
 
   login() {
     this._isLoggingIn = true;
@@ -75,7 +70,6 @@ export class LoginComponent implements OnInit {
     if (this.username.valid && this.passwd.valid) {
       return 'primary';
     }
-
     return 'disabled';
   }
 
