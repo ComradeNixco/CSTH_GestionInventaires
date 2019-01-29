@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { UserManagerComponent } from './components/user-manager/user-manager.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     ReactiveFormsModule
   ],
   exports: [ LoginComponent, RegisterComponent ],
-  declarations: [ LoginComponent, RegisterComponent ],
+  declarations: [ LoginComponent, RegisterComponent, UserManagerComponent ],
   providers: [
     UserService
   ]

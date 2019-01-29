@@ -13,6 +13,14 @@ import { Subscription } from 'rxjs';
 export class AppComponent implements OnInit, OnDestroy {
   constructor(public userSvc: UserService) {}
 
+  public get currentUser(): User {
+    return this.userSvc.currentUser;
+  }
+
+  public get IsCurrentUserAdmin(): boolean {
+    return this.currentUser && this.currentUser.isAdmin;
+  }
+
   ngOnInit(): void {
   }
 

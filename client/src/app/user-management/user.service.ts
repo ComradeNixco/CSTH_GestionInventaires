@@ -17,7 +17,7 @@ export class UserService {
   private _token: string;
   private readonly TOKEN_STORAGE_KEY = 'api.user.token';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this._token = localStorage.getItem(this.TOKEN_STORAGE_KEY) || '';
   }
 
@@ -28,6 +28,7 @@ export class UserService {
    */
   public logout(): void {
     this.token = '';
+    this.router.navigate(['login']);
   }
 
   public get currentUser(): User {
