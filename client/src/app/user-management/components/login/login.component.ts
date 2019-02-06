@@ -29,7 +29,7 @@ export class LoginComponent {
   login() {
     this._isLoggingIn = true;
     this.userSvc.login({
-      username: this.username.value,
+      username: this.username.value.trim(),
       passwd: this.passwd.value
     }).subscribe(res => {
       this._isLoggingIn = false;
