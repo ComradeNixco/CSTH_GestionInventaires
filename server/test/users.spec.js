@@ -16,7 +16,7 @@ describe('Users API', function() {
     it('should respond with HTTP 400 (BAD REQUEST) if request body is malformed', function(done) {
       request
         .post(`${BASE_URL}/login`)
-        .send({}) // Some invalid JSON object
+        .send('{') // Some invalid JSON object
         .expect(HttpCodes.BAD_REQUEST, done)
       ;
     });
